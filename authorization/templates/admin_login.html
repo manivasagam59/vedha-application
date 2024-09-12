@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>Admin Login</title>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'login_style.css' %}">
+<link rel="stylesheet" href="{% static 'boxicon/boxicons.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% if error != "" %}
+<div class="toast error">
+    <p>{{ error }}</p>
+    <span class="bx bx-x"></span>
+</div>
+{% endif %}
+
+<div class="my-form">
+
+    <div class="form-changer">
+        <h2>Hi, Welcome</h2>
+        <h3>Vedha Communications</h3>
+        <p>Enter your user name and password to login into the store.</p>
+
+        <a href="{% url 'store_login' %}">Store login</a>
+
+    </div>
+
+    <form action="{% url 'admin_login' %}" method="post" class="form-content">
+
+        {% csrf_token %}
+
+        <h2>Sign in</h2>
+        <input type="text" placeholder="User name" name="username">
+        <input type="password" placeholder="Password" name="password" class="mg-sm">
+
+        <div class="remember-me">
+            <input type="checkbox" name="remember" id="remember">
+            <label for="remember">Remember Me</label>
+        </div>
+        <button name="action" value="admin_login">Sign in</button>
+
+    </form>
+
+</div>
+
+<script>
+
+    let toast = document.getElementsByClassName("toast");
+    if (toast.length>0) {
+        let cls_btn = toast[0].children[1];
+        cls_btn.addEventListener("click", () => {
+            toast[0].remove();
+        })
+    }
+
+</script>
+
+{% endblock %}

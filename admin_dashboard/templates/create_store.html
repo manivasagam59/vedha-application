@@ -1,0 +1,49 @@
+{% extends "admin_panel_base.html" %}
+{% block main_window %}
+<h3 class="app-title">Create new store</h3>
+
+<!-- Create Store -->
+<form action="{% url 'create_store' %}" method="post">
+    {% csrf_token %} 
+
+    <label class="custom-label">Store name</label>
+    <input type="text" name="store_name" id="" class="custom-input" required>
+    
+    <!-- 
+    <label class="custom-label" style="margin-top: 20px;">Location</label>
+    <input type="text" name="store_location" id="" class="custom-input" required>
+     -->
+
+    <label class="custom-label" style="margin-top: 20px;">Services</label>
+    <div
+        style="display: flex;align-items: center;justify-content: space-between;margin-top: 10px;padding: 15px;border: 1px solid lightgray;border-radius: 10px;">
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="mobile_recharge" id="mobile_recharge">
+            <label for="mobile_recharge">Mobile Recharge</label>
+        </div>
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="dth_recharge" id="dth_recharge">
+            <label for="dth_recharge">Dth Recharge</label>
+        </div>
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="online_service" id="online_service">
+            <label for="online_service">Online Service</label>
+        </div>
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="product_sale" id="product_sale">
+            <label for="product_sale">Product Sale</label>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button class="custom-btn">Create store</button>
+    </div>
+
+</form>
+
+{% endblock %}

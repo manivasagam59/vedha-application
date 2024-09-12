@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block title%}{% endblock %}
+
+    <link rel="stylesheet" href="{% static 'boxicon/boxicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'components.css' %}">
+</head>
+
+<body>
+    
+    <div class="sidebar">
+        
+        {% block sidebar_content %}
+        {% endblock %}
+        
+    </div>
+    
+    <div class="main-window">
+        
+        {% block main_window_top %}
+        {% endblock %}
+
+        {% block main_window %}
+        {% endblock %}
+        
+    </div>
+    
+    <script src="{% static 'components.js' %}"></script>
+
+    <script>
+        {% block js_scripts %}
+        {% endblock %}
+
+    </script>
+    
+</body>
+
+</html>

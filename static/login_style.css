@@ -1,0 +1,183 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.my-form {
+    /* max-width: ; */
+    width: 800px;
+    min-height: 400px;
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 5px 15px lightgray;
+}
+
+.my-form>form,
+.my-form>div {
+    width: 50%;
+    padding: 50px 30px;
+}
+
+.my-form .form-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+}
+
+.my-form .form-content h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.my-form .form-content>input[type="text"],
+.my-form .form-content>input[type="password"] {
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #EEEEEE;
+    font-size: 14px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.my-form .form-content>input[type="password"].mg-sm {
+    margin-bottom: 5px;
+}
+
+.my-form .form-content>button {
+    padding: 8px 10px;
+    width: 50%;
+    border-radius: 20px;
+    background-color: #EA462D;
+    color: #fff;
+    text-transform: uppercase;
+    border: 1px solid #EA462D;
+    font-weight: 600;
+    margin-top: 25px;
+}
+
+
+.my-form .form-changer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(to right, #E6414F, #E73C6A);
+    color: #fff;
+}
+
+.my-form .form-changer h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    font-weight: normal;
+}
+
+.my-form .form-changer h3 {
+    font-size: 18px;
+    margin-bottom: 25px;
+    font-weight: normal;
+}
+
+.my-form .form-changer p {
+    font-size: 14px;
+    text-align-last: center;
+}
+
+.my-form .form-changer a {
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 10px;
+    width: 50%;
+    border-radius: 20px;
+    background-color: transparent;
+    color: #fff;
+    text-transform: uppercase;
+    border: 1px solid #fff;
+    font-weight: 600;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.remember-me {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+.remember-me input {
+    accent-color: #EA462D;
+    width: 15px;
+    height: 15px;
+}
+
+.remember-me label {
+    font-size: 14px;
+    color: #2f2f2f;
+}
+
+
+.toast {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border: 2px solid darkgray;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    animation: fade 0.5s forwards;
+    animation-delay: 0.5s;
+}
+
+.toast p {
+    color: #2f2f2f;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+
+.toast .bx {
+    font-size: 20px;
+    color: #2f2f2f;
+    cursor: pointer;
+}
+
+.toast.error {
+    border: 2px solid indianred;
+    background-color: rgb(255, 246, 246);
+}
+
+.toast.error p {
+    color: indianred;
+}
+
+
+@keyframes fade {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}

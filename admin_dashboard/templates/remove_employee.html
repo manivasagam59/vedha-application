@@ -1,0 +1,31 @@
+{% extends "admin_panel_base.html" %}
+{% block main_window %}
+<h3 class="app-title">Delete Employee</h3>
+
+<!-- Delete Employee -->
+<form action="{% url 'remove_employee' %}" method="post">
+
+    {% csrf_token %} 
+
+    <label class="custom-label" style="margin-top: 15px;">Choose Employee</label>
+    <div class="custom-dropdown">
+        <input type="text" name="employee_name" readonly>
+        <div class="arrow"></div>
+        <ul class="options-list">
+        {% for emp in employees_list %}
+            <li class="option">{{ emp }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="custom-checkbox" style="margin-top: 15px;">
+        <input type="checkbox" name="confirm" id="confirm-deletion">
+        <label for="confirm-deletion">Confirm employee deletion</label>
+    </div>
+
+    <div style="margin-top: 15px;">
+        <button class="custom-btn">Remove Employee</button>
+    </div>
+
+</form>
+
+{% endblock %}

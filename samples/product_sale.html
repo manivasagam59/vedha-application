@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="../static/boxicon/boxicons.min.css">
+    <link rel="stylesheet" href="../static/dashboard_styles.css">
+    <link rel="stylesheet" href="../static/components.css">
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <div>
+            <p class="welcome-txt">Hi, Welcome</p>
+            <div class="options-box">
+                <a href="" class="active"> <span class="bx bx-home-alt"></span> <span>Dashboard</span></a>
+                <a href=""> <span class="bx bx-mobile-alt"></span> <span>Mobile Recharge</span></a>
+                <a href=""> <span class="bx bx-broadcast"></span> <span>Dth Recharge</span></a>
+                <a href=""> <span class="bx bx-world"></span> <span>Online Services</span></a>
+                <a href=""> <span class="bx bx-check-square"></span> <span>Pending Tasks</span></a>
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="options-box">
+                <a href=""> <span class="bx bx-log-out"></span> <span>Logout</span></a>
+                <a href=""> <span class="bx bxs-user-account"></span> <span>Switch user</span></a>
+            </div>
+
+            <div class="user-info">
+
+                <div class="profile-img">
+                    <img src="../static/profileimgs/male_1.png" alt="">
+                </div>
+                <div class="info">
+                    <p class="lg">Username</p>
+                    <p class="sm"></p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="main-window" style="padding: 25px 50px;">
+
+        <div class="title-bar">
+            <h1>Dashboard</h1>
+            <h3><span class="bx bx-store"></span><span>Vedha E-sevai maiyyam</span></h3>
+        </div>
+
+        <div style="display: flex;">
+
+            <div style="width: 400px;">
+
+                <label class="custom-label">Choose Product</label>
+                <div class="custom-dropdown">
+                    <input type="text" placeholder="Choose product" name="store" id="product"
+                        onfocusout="focus_outed()">
+                    <div class="arrow"></div>
+                    <ul class="options-list" id="product_list">
+                        <ol class="option">Pen</ol>
+                        <ol class="option">Pencil</ol>
+                        <ol class="option">Note</ol>
+                        <ol class="option">Book</ol>
+                    </ul>
+                </div>
+
+                <label class="custom-label" style="margin-top: 20px;">Rate</label>
+                <input type="number" min="0" name="" class="custom-input" disabled>
+
+                <label class="custom-label" style="margin-top: 20px;">Quantity</label>
+                <input type="text" name="" class="custom-input">
+
+                <label class="custom-label" style="margin-top: 20px;">Price</label>
+                <input type="number" min="0" name="" class="custom-input" disabled>
+
+                <div style="margin-top: 20px;">
+                    <button class="custom-btn">Add Product</button>
+                </div>
+
+            </div>
+
+            <div style="flex-grow: 1; margin-left: 20px;">
+
+                <label class="custom-label" style="margin-bottom: 5px;">Products in cart</label>
+
+                <div class="cart-table" style="height: 400px;overflow-y: auto;">
+                    <table class="custom-table">
+
+                        <tr style="display: sticky;top: 0;">
+                            <th class="center">Sn</th>
+                            <th class="left">Product Name</th>
+                            <th class="right">Rate</th>
+                            <th class="right">Quantity</th>
+                            <th class="right">Price</th>
+                        </tr>
+
+                        <tr>
+                            <td class="center">1</td>
+                            <td class="left">Note</td>
+                            <td class="right">10</td>
+                            <td class="right">100</td>
+                            <td class="right">100</td>
+                        </tr>
+
+                        <tr>
+                            <td class="center">2</td>
+                            <td class="left">Pen</td>
+                            <td class="right">5</td>
+                            <td class="right">50</td>
+                            <td class="right">250</td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <input type="text" name="" class="custom-input" value="Total price : 1100" style="margin-top: 20px;"
+                    disabled>
+                <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center; ">
+                    <button class="custom-btn">Pay amount</button>
+                    <button class="custom-btn secondary">Clear all</button>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    </div>
+
+    <script src="../static/components.js"></script>
+    <script>
+
+        let product_inp = document.getElementById("product");
+        let product_list = document.getElementById("product_list");
+        product_inp.selected = false;
+        product_inp.onvaluechange = () => {
+            product_inp.selected = true
+
+        }
+        function focus_outed() {
+            if (product_inp.selected == false) {
+                product_inp.value = ""
+            }
+            for (let i = 0; i < product_list.children.length; i++) {
+                product_list.children[i].style.display = "block";
+            }
+        }
+
+        product_inp.onkeyup = () => {
+            product_inp.selected = false
+            prd = product_inp.value.toLowerCase();
+            for (let i = 0; i < product_list.children.length; i++) {
+                if (product_list.children[i].innerText.toLowerCase().indexOf(prd) == -1) {
+                    product_list.children[i].style.display = "none";
+                } else {
+                    product_list.children[i].style.display = "block";
+                }
+            }
+        }
+
+    </script>
+
+
+</body>
+
+</html>

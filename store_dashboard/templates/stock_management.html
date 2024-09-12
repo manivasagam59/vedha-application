@@ -1,0 +1,239 @@
+{% extends 'store_panel_base.html' %}
+{% block main_window %}
+
+<div class="popup-form-bg hide" id="popup_bg">
+
+    <!-- ADD PRODUCT FORM  -->
+    <div class="form hide" id="create_app">
+        <div class="title">
+            <h3>Add new product</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="{% url 'stock_management' %}" method="post">
+
+            {% csrf_token %}
+
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Product name</label>
+                <input type="text" name="product_name" class="custom-input" required>
+            </div>
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Price</label>
+                <input type="number" min="0" name="price" class="custom-input" required>
+            </div>
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Stock Quantity</label>
+                <input type="number" min="0" name="quantity" class="custom-input" required>
+            </div>
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Minimum stock for notification</label>
+                <input type="number" min="0" name="min_stock" class="custom-input" required>
+            </div>
+            <div style="margin-top: 20px;text-align:right;">
+                <button class="custom-btn" name="action" value="add">Add Product</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- EDIT PRODUCT FORM  -->
+    <div class="form hide" id="edit_form">
+        <div class="title">
+            <h3>Edit product</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="{% url 'stock_management' %}" method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="product_id">
+
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Product name</label>
+                <input type="text" name="product_name" class="custom-input" required>
+            </div>
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Price</label>
+                <input type="number" min="0" name="price" class="custom-input" required>
+            </div>
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Stock Quantity</label>
+                <input type="number" min="0" name="quantity" class="custom-input" required>
+            </div>
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Minimum stock for notification</label>
+                <input type="number" min="0" name="min_stock" class="custom-input" required>
+            </div>
+            <div style="margin-top: 20px;text-align:right;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button class="custom-btn"  name="action" value="update">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- DELETE CONFIRMATION FORM  -->
+    <div class="form hide" id="delete_confirm">
+        <div class="title">
+            <h3>Confirm deletion</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="{% url 'stock_management' %}" method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="product_id">
+
+            <label class="custom-label">Do you want to delete the product from stock list?</label>
+
+            <div style="margin-top: 20px;text-align:right;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button class="custom-btn"  name="action" value="delete">Delete</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+
+
+
+<div style="display: flex;align-items: center;justify-content: space-between;margin-bottom: 20px;">
+<h3>Store stocks list</h3>
+<button class="custom-btn" id="create_stock_btn">Add new product</button>
+</div>
+
+{% if stocks %}
+    <table class="custom-table" id="stock_list_tb">
+
+        <tr style="display: sticky;top: 0;">
+            <th class="center">Sn</th>
+            <th class="left">Product Name</th>
+            <th class="right">Rate</th>
+            <th class="right">Quantity</th>
+            <th class="right" style="width: min-content;">Notifier count</th>
+            <th class="right">Stock price</th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        {% for i in stocks %}
+        <tr aria-label="{{ i.id }}">
+            <td class="center">{{ forloop.counter }}</td>
+            <td class="left">{{ i.product_name }}</td>
+            <td class="right">{{ i.price }}</td>
+            <td class="right">{{ i.stock_quantity }}</td>
+            <td class="right">{{ i.notification_at }}</td>
+            <td class="right">{{ i.stock_price }}</td>
+            <td><span class="bx bx-edit"></span></td>
+            <td><span class="bx bx-trash"></span></td>
+        </tr>
+        {% endfor %}
+        <tr style="background-color: rgb(246, 233, 233);">
+            <td colspan="5" class="left">Total stock price in the store</td>
+            <td class="right">{{ total_stock_price }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+
+
+    </table>
+{% else %}
+<p class="no-data-found">No Stocks found!</p>
+{% endif %}
+
+
+
+{% endblock %}
+
+{% block app_js_scripts %}
+
+
+    let create_stock_btn = document.getElementById("create_stock_btn");
+
+    class PopUpApp {
+
+        setListeners() {
+            let curr = this;
+            this.close_btn.addEventListener("click", () => { curr.close(); })
+            if (this.cancel_btn != null) {
+                this.cancel_btn.addEventListener("click", () => { curr.close(); })
+            }
+        }
+
+        reset_form() {
+            for (let i = 0; i < this.inputs.length; i++) {
+                if(this.inputs[i].name!="csrfmiddlewaretoken"){
+                this.inputs[i].value = "";}
+            }
+        }
+
+        close() {
+            this.reset_form();
+            this.app.classList.add("hide");
+            this.app_bg.classList.add("hide");
+        }
+
+        open(val_obj) {
+            this.reset_form();
+            this.app.classList.remove("hide");
+            this.app_bg.classList.remove("hide");
+            let keys=Object.keys(val_obj);
+            for(let i=0;i<keys.length;i++){
+                this.inputs_dict[keys[i]].value=val_obj[keys[i]]
+            }
+            
+        }
+
+        constructor(app_bg_id, app_id) {
+            this.app_bg = document.getElementById(app_bg_id);
+            this.app = document.getElementById(app_id);
+            this.inputs = this.app.getElementsByTagName("input");
+            this.close_btn = this.app.getElementsByClassName("bx-x")[0];
+            this.cancel_btn = this.app.getElementsByClassName("secondary")[0];
+            this.inputs_dict={};
+            for(let i=0;i<this.inputs.length;i++){
+                    this.inputs_dict[this.inputs[i].name]=this.inputs[i];
+            }
+            this.setListeners();
+        }
+    }
+
+    let create_form = new PopUpApp("popup_bg", "create_app");
+    let edit_form = new PopUpApp("popup_bg", "edit_form");
+    let delete_confirm_form = new PopUpApp("popup_bg", "delete_confirm");
+
+    create_stock_btn.addEventListener("click",()=>{create_form.open({})})
+
+    function close_all_app(app_name,val){
+        create_form.close();
+        edit_form.close();
+        delete_confirm_form.close();
+    }
+
+    {% if stocks %}
+
+    let stock_list_table = document.getElementById("stock_list_tb");
+    let edit_btns = stock_list_table.querySelectorAll("span.bx-edit");
+    let delete_btns = stock_list_table.querySelectorAll("span.bx-trash");
+    for (let i = 0; i < edit_btns.length; i++) {
+        close_all_app();
+        let obj_val={};
+        let parent=delete_btns[i].parentNode.parentElement;
+        obj_val.product_id=parent.ariaLabel;
+        obj_val.product_name=parent.cells[1].innerText;
+        obj_val.price=parent.cells[2].innerText;
+        obj_val.quantity=parent.cells[3].innerText;
+        obj_val.min_stock=parent.cells[4].innerText;
+        edit_btns[i].addEventListener("click", () => { edit_form.open(obj_val) });
+    }
+    for (let i = 0; i < delete_btns.length; i++) {
+        close_all_app();
+        let obj_val={};
+        let parent=delete_btns[i].parentNode.parentElement;
+        obj_val.product_id=parent.ariaLabel;
+        delete_btns[i].addEventListener("click", () => { delete_confirm_form.open(obj_val) });
+    }
+    {% endif %}
+
+
+{% endblock %}

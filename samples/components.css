@@ -1,0 +1,148 @@
+/* Custom label ========================================================= */
+label.custom-label {
+    display: block;
+    font-size: 14px;
+    color: #2f2f2f;
+    font-weight: 500;
+}
+
+/* ======================================================================= */
+
+/* Custom Button ========================================================= */
+button.custom-btn{
+    padding: 8px 30px;
+    border: 1px solid indianred;
+    outline: none;
+    background-color: transparent;
+    color: indianred;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+/* ======================================================================= */
+
+/* Custom TextArea Field ==================================================== */
+textarea.custom-textarea {
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #EEEEEE;
+    font-size: 14px;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ======================================================================= */
+
+/* Custom CheckBox  Field ==================================================== */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-checkbox input[type="checkbox"]{
+    width: 15px;
+    height: 15px;
+    accent-color: indianred;
+}
+
+.custom-checkbox label{
+    font-size: 14px;
+    color: #2f2f2f;
+}
+
+/* ======================================================================= */
+
+
+
+/* Custom Input Field ==================================================== */
+input.custom-input {
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #EEEEEE;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+/* Number Field */
+input[type="number"].custom-input.mb-no {
+    letter-spacing: 5px;
+}
+
+input[type="number"].custom-input::-webkit-inner-spin-button {
+    display: none;
+}
+
+/* ======================================================================= */
+
+/* Custom Dropdown ======================================================= */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
+.custom-dropdown input[type="text"] {
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #EEEEEE;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.custom-dropdown .arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translate(-50%, -75%) rotateZ(45deg);
+    width: 10px;
+    height: 10px;
+    border: none;
+    border-right: 2px solid darkgray;
+    border-bottom: 2px solid darkgray;
+}
+
+
+.custom-dropdown .options-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px lightgray;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.custom-dropdown input[type="text"]:focus~.options-list {
+    height: auto;
+}
+
+.custom-dropdown input[type="text"]:focus~.arrow {
+    transform: translate(-50%, -25%) rotateZ(225deg);
+}
+
+.custom-dropdown .options-list .option {
+    padding: 10px 10px;
+    font-size: 14px;
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+}
+
+.custom-dropdown .options-list .option:hover {
+    background-color: #FAFAFA;
+}
+
+/* =========================================================================== */

@@ -1,0 +1,295 @@
+/* Custom label ========================================================= */
+label.custom-label {
+    display: block;
+    font-size: 14px;
+    color: #2f2f2f;
+    font-weight: 500;
+}
+
+/* ======================================================================= */
+
+/* Custom Button ========================================================= */
+button.custom-btn {
+    padding: 10px 30px;
+    border: none;
+    background-image: linear-gradient(45deg, #ff5752, #ff7b7b);
+    color: white;
+    outline: none;
+    background-color: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+button.custom-btn:hover {
+    background-image: linear-gradient(45deg, #ff4f49, #ff6d6d);
+}
+
+button.custom-btn.secondary {
+    background-image: linear-gradient(45deg, #f6f6f6, #efefef);
+    color: #2f2f2f;
+}
+
+button.custom-btn.secondary:hover {
+    background-image: linear-gradient(45deg, #f3f3f3, #eaeaea);
+}
+/* ======================================================================= */
+
+/* Custom TextArea Field ==================================================== */
+textarea.custom-textarea {
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #EEEEEE;
+    font-size: 14px;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ======================================================================= */
+
+/* Custom CheckBox  Field ==================================================== */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-checkbox input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: indianred;
+}
+
+.custom-checkbox label {
+    font-size: 14px;
+    color: #2f2f2f;
+}
+
+/* ======================================================================= */
+
+
+
+/* Custom Input Field ==================================================== */
+input.custom-input {
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #EEEEEE;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+/* Number Field */
+input[type="number"].custom-input.mb-no {
+    letter-spacing: 5px;
+}
+
+input[type="number"].custom-input::-webkit-inner-spin-button {
+    display: none;
+}
+
+/* ======================================================================= */
+
+/* Custom Dropdown ======================================================= */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
+.custom-dropdown input[type="text"] {
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #EEEEEE;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: default;
+}
+
+.custom-dropdown .arrow {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translate(-50%, -75%) rotateZ(45deg);
+    width: 10px;
+    height: 10px;
+    border: none;
+    border-right: 2px solid darkgray;
+    border-bottom: 2px solid darkgray;
+}
+
+
+.custom-dropdown .options-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    max-height: 165px;
+    overflow-y: auto;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px lightgray;
+    background-color: #fff;
+}
+
+.custom-dropdown .options-list::-webkit-scrollbar {
+    width: 10px;
+    background-color: #f6f6f6;
+}
+
+.custom-dropdown .options-list::-webkit-scrollbar-track {
+    width: 100%;
+}
+
+
+.custom-dropdown .options-list::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+}
+
+.custom-dropdown.active .options-list {
+    height: auto;
+}
+
+.custom-dropdown.active .arrow {
+    transform: translate(-50%, -25%) rotateZ(225deg);
+}
+
+.custom-dropdown .options-list {
+    list-style: none;
+}
+
+.custom-dropdown .options-list .option {
+    padding: 10px 10px;
+    font-size: 14px;
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: default;
+}
+
+.custom-dropdown .options-list .option:hover {
+    background-color: #FAFAFA;
+}
+
+/* =========================================================================== */
+
+.custom-table {
+    width: 100%;
+    border: 1px solid #EEEEEE;
+    border-collapse: collapse;
+}
+
+.custom-table th {
+    border: 1px solid #2f2f2f;
+    padding: 10px 10px;
+    background-color: #2f2f2f;
+    color: #fff;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.custom-table td {
+    border: 1px solid #EEEEEE;
+    padding: 15px 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.custom-table td.num {
+    letter-spacing: 5px;
+}
+
+.custom-table th.right,
+.custom-table td.right {
+    text-align: right;
+}
+
+.custom-table th.left,
+.custom-table td.left {
+    text-align: left;
+}
+
+.custom-table th.center,
+.custom-table td.center {
+    text-align: center;
+}
+
+.custom-table a.bx{
+    text-decoration: none;
+}
+.custom-table .bx{
+    font-size: 20px;
+}
+
+.custom-table .bx-trash{
+    color: red;
+}
+
+.custom-table .bx-receipt{
+    color: dodgerblue;
+}
+
+
+.custom-table .bx-edit{
+    color: darkslateblue;
+}
+
+/* Custom notification ============================================================= */
+.notification {
+    display: flex;
+    font-size: 14px;
+    max-width: 400px;
+    align-items: center;
+    gap: 15px;
+    position: fixed;
+    bottom: 10px;
+    right: 40px;
+    padding: 10px 15px;
+    border-radius: 15px 15px 0 15px;
+    transform: translateY(120%);
+    border: 2px solid rgb(45, 45, 45);
+    background-color: rgb(243, 243, 243);
+    color: rgb(45, 45, 45);
+    animation: rtol 0.4s forwards;
+    animation-delay: 0.4s;
+    display: none;
+}
+
+.notification.green {
+    display: flex;
+    border: 2px solid green;
+    background-color: rgb(239, 255, 239);
+    color: green;
+}
+
+.notification.red {
+    display: flex;
+    border: 2px solid red;
+    background-color: rgb(255, 247, 247);
+    color: red;
+}
+
+.notification .bx {
+    font-size: 20px;
+    color: #2f2f2f;
+}
+
+/* ================================================================================= */
+@keyframes rtol {
+    from{
+        transform: translateY(120%);
+    }
+    to{
+        transform: translateY(0%);
+    }
+    
+}

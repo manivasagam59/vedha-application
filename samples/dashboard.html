@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="../static/boxicon/boxicons.min.css">
+    <link rel="stylesheet" href="../static/dashboard_styles.css">
+    <link rel="stylesheet" href="../static/components.css">
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <div>
+            <p class="welcome-txt">Hi, Welcome</p>
+            <div class="options-box">
+                <a href="" class="active"> <span class="bx bx-home-alt"></span> <span>Dashboard</span></a>
+                <a href=""> <span class="bx bx-mobile-alt"></span> <span>Mobile Recharge</span></a>
+                <a href=""> <span class="bx bx-broadcast"></span> <span>Dth Recharge</span></a>
+                <a href=""> <span class="bx bx-world"></span> <span>Online Services</span></a>
+                <a href=""> <span class="bx bx-check-square"></span> <span>Pending Tasks</span></a>
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="options-box">
+                <a href=""> <span class="bx bx-log-out"></span> <span>Logout</span></a>
+                <a href=""> <span class="bx bxs-user-account"></span> <span>Switch user</span></a>
+            </div>
+
+            <div class="user-info">
+
+                <div class="profile-img">
+                    <img src="../static/profileimgs/male_1.png" alt="">
+                </div>
+                <div class="info">
+                    <p class="lg">Username</p>
+                    <p class="sm"></p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="main-window">
+
+        <div class="title-bar">
+            <h1>Dashboard</h1>
+            <h3><span class="bx bx-store"></span><span>Vedha E-sevai maiyyam</span></h3>
+        </div>
+
+        <!-- Mobile Recharge -->
+        <label class="custom-label" style="margin-top: 10px;">Mobile Number</label>
+        <input type="number" min="1111111111" max="9999999999" name="" id="" class="custom-input mb-no">
+
+        <label class="custom-label" style="margin-top: 15px;">Choose Operator</label>
+        <label class="custom-dropdown" for="mobile-operator">
+            <input id="mobile-operator" type="text" placeholder="Choose Operator" name="store">
+            <div class="arrow"></div>
+            <div class="options-list">
+                <button class="option">Airtel</button>
+                <button class="option">BSNL</button>
+                <button class="option">Jio</button>
+                <button class="option">VI</button>
+            </div>
+        </label>
+
+        <label class="custom-label" style="margin-top: 20px;">Amount</label>
+        <input type="number" min="0" max="5000" name="" id="" class="custom-input">
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Pay</button>
+        </div>
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+
+        <!-- DTH Recharge -->
+        <label class="custom-label" style="margin-top: 10px;">Dth Number</label>
+        <input type="text" name="" id="" class="custom-input mb-no">
+
+        <label class="custom-label" style="margin-top: 15px;">Choose Operator</label>
+        <label class="custom-dropdown" for="dth-operetor">
+            <input id="dth-operetor" type="text" placeholder="Choose Operator" name="store">
+            <div class="arrow"></div>
+            <div class="options-list">
+                <button class="option">Airtel</button>
+                <button class="option">Sun Direct</button>
+            </div>
+        </label>
+
+        <label class="custom-label" style="margin-top: 20px;">Amount</label>
+        <input type="number" min="0" max="5000" name="" id="" class="custom-input">
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Pay</button>
+        </div>
+
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+        <!-- Online Services -->
+
+        <label class="custom-label" style="margin-top: 15px;">Choose Service</label>
+        <label class="custom-dropdown">
+            <input type="text" placeholder="Choose Operator" name="store">
+            <div class="arrow"></div>
+            <div class="options-list">
+                <button class="option">Aadhar Service</button>
+                <button class="option">PAN Service</button>
+                <button class="option">Votor Service</button>
+                <button class="option">Other</button>
+            </div>
+        </label>
+
+        <label class="custom-label" style="margin-top: 20px;">Describe</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 20px;">Amount</label>
+        <input type="number" min="0" max="5000" name="" id="" class="custom-input">
+
+        <div class="custom-checkbox" style="margin-top: 20px;">
+            <input type="checkbox" name="" id="pending-task">
+            <label for="pending-task">Add as a Pending task</label>
+        </div>
+
+        <div class="custom-checkbox" style="margin-top: 20px;">
+            <input type="checkbox" name="" id="pending-ammount">
+            <label for="pending-ammount">Add as a Pending Payment</label>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Pay</button>
+        </div>
+
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+        <!-- Product  Sale -->
+
+        <div style="display: flex;">
+
+            <div style="width: 400px;">
+
+                <label class="custom-label" >Choose Product</label>
+                <div class="custom-dropdown">
+                    <input type="text" placeholder="Choose product" name="store">
+                    <div class="arrow"></div>
+                    <ul class="options-list">
+                        <ol class="option">Pen</ol>
+                        <ol class="option">Pencil</ol>
+                        <ol class="option">Note</ol>
+                        <ol class="option">Book</ol>
+                    </ul>
+                </div>
+
+                <label class="custom-label" style="margin-top: 20px;">Rate</label>
+                <input type="number" min="0" name="" class="custom-input" disabled>
+
+                <label class="custom-label" style="margin-top: 20px;">Quantity</label>
+                <input type="text" name="" class="custom-input">
+
+                <label class="custom-label" style="margin-top: 20px;">Price</label>
+                <input type="number" min="0" name="" class="custom-input" disabled>
+
+                <div style="margin-top: 20px;">
+                    <button class="custom-btn">Add Product</button>
+                </div>
+
+            </div>
+
+            <div style="flex-grow: 1; margin-left: 20px;">
+
+                <label class="custom-label" style="margin-bottom: 5px;">Products in cart</label>
+                <table class="custom-table">
+
+                    <tr>
+                        <th class="center">Sn</th>
+                        <th class="left">Product Name</th>
+                        <th class="right">Rate</th>
+                        <th class="right">Quantity</th>
+                        <th class="right"></th>
+                    </tr>
+
+                    <tr>
+                        <td class="center">1</td>
+                        <td class="left">Note</td>
+                        <td class="right">10</td>
+                        <td class="right">100</td>
+                        <td class="right">100</td>
+                    </tr>
+
+                    <tr>
+                        <td class="center">2</td>
+                        <td class="left">Pen</td>
+                        <td class="right">5</td>
+                        <td class="right">50</td>
+                        <td class="right">250</td>
+                    </tr>
+
+                </table>
+
+                <input type="text" name="" class="custom-input" value="Total price : 1100" style="margin-top: 20px;" disabled>
+                <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center; ">
+                    <button class="custom-btn">Pay amount</button>
+                    <button class="custom-btn secondary">Clear all</button>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+</body>
+
+</html>

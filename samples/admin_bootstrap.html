@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/boxicon/boxicons.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-wrap: nowrap;
+            min-height: 100vh;
+        }
+        .bx{
+            font-size: 18px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">Admin Panel</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" aria-current="page">
+                    <span class="bx bx-home-alt"></span><span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    <span class="bx bx-user-plus"></span><span>Add Employee</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    <span class="bx bx-user-minus"></span><span>Remove Employee</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    <span class="bx bx-store"></span><span>Create New Store</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link text-white">
+                    <span class="bx bx-edit"></span><span>Edit Store</span>
+                </a>
+            </li>
+            <li></li>
+                <a href="#" class="nav-link text-white">
+                    <span class="bx bx-trash-alt"></span><span>Delete Store</span>
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="../static/profileimgs/male_2.png" alt="" width="45" height="45" class="rounded-circle me-2">
+                <strong>mdo</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Sign out</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container-fluid p-5 bg-dark text-white">
+        <div class="mb-3">
+            <label for="" class="form-label">Employee name</label>
+            <input class="form-control" type="text" placeholder="Default input" aria-label="default input example">
+        </div>
+        
+        <div class="mb-3">
+            <label for="" class="form-label">Gender</label>
+            <select class="form-select" aria-label="Default select example">
+                <option disabled selected>Open this select menu</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="" class="form-label">Contact number</label>
+            <input class="form-control" type="number" placeholder="Mobile number" aria-label="default input example">
+        </div>
+
+        <button type="button" class="btn btn-primary">Create</button>
+
+    </div>
+
+
+    <script src="../static/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

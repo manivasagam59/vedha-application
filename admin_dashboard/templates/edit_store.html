@@ -1,0 +1,77 @@
+{% extends "admin_panel_base.html" %}
+{% block main_window %}
+<h3 class="app-title">Edit store detail and services</h3>
+
+<!-- Edit Store -->
+
+<form action="{% url 'edit_store' %}" method="get">
+    <label class="custom-label" style="margin-top: 15px;">Choose Store</label>
+    <div class="custom-dropdown">
+        <input type="text" name="store_name"  {% if selected_store_name %} value='{{ selected_store_name }}' {% endif %}  readonly>
+        <div class="arrow"></div>
+        <ul class="options-list">
+            {% for store in stores_list %}
+            <button class="option">{{ store }}</button>
+            {% endfor %}
+        </ul>
+    </div>
+
+</form>
+
+<form action="{% url 'edit_store' %}" method="post">
+    {% csrf_token %}
+
+    <input type="hidden" name="selected_store" value="{{ selected_store_name }}">
+
+    <label class="custom-label" style="margin-top: 20px;">Store name</label>
+    <input type="text" name="store_new_name" {% if selected_store_name == None %} disabled {% endif %} {% if selected_store_name %} value='{{ selected_store_name }}' {% endif %} id="" class="custom-input" required="true">
+    
+    <!-- 
+    <label class="custom-label" style="margin-top: 20px;">Location</label>
+    <input type="text" name=""  class="custom-input" required="true">
+    -->
+
+    <label class="custom-label" style="margin-top: 20px;">Services</label>
+    <div
+        style="display: flex;align-items: center;justify-content: space-between;margin-top: 10px;padding: 15px;border: 1px solid lightgray;border-radius: 10px;">
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="mobile_recharge" id="mobile_recharge" {% if mbr_available %} checked='{{ mbr_available }}' {% endif %} {% if selected_store_name == None %} disabled {% endif %}>
+            <label for="mobile_recharge">Mobile Recharge</label>
+        </div>
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="dth_recharge" id="dth_recharge" {% if dth_available %} checked='{{ dth_available }}' {% endif %} {% if selected_store_name == None %} disabled {% endif %}>
+            <label for="dth_recharge">Dth Recharge</label>
+        </div>
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="online_service" id="online_service" {% if os_Available %} checked='{{ os_Available }}' {% endif %} {% if selected_store_name == None %} disabled {% endif %}>
+            <label for="online_service">Online Service</label>
+        </div>
+
+        <div class="custom-checkbox">
+            <input type="checkbox" name="product_sale" id="product_sale" {% if ps_available %} checked='{{ ps_available }}' {% endif %} {% if selected_store_name == None %} disabled {% endif %}>
+            <label for="product_sale">Product Sale</label>
+        </div>
+
+    </div>
+
+    <div class="custom-checkbox" style="margin-top: 15px;">
+        <input type="checkbox" name="service-deletion" id="delete-service-changes" {% if selected_store_name == None %} disabled {% endif %}>
+        <label for="delete-service-changes">Don't delete data of existed services that are not available after changes
+            apply.</label>
+    </div>
+
+    <div class="custom-checkbox" style="margin-top: 15px;">
+        <input type="checkbox" name="changes-confirmation" id="confirm-changes" {% if selected_store_name == None %} disabled {% endif %}>
+        <label for="confirm-changes">Confirm changes</label>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button class="custom-btn" {% if selected_store_name == None %} disabled {% endif %}>Save changes</button>
+    </div>
+
+</form>
+
+{% endblock %}

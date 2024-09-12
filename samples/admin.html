@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="../static/boxicon/boxicons.min.css">
+    <link rel="stylesheet" href="../static/dashboard_styles.css">
+    <link rel="stylesheet" href="../static/components.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <div>
+            <div class="options-box">
+                <a href="" class="active"> <span class="bx bx-home-alt"></span> <span>Dashboard</span></a>
+                <a href=""> <span class="bx bx-user-plus"></span> <span>Add Employee</span></a>
+                <a href=""> <span class="bx bx-user-minus"></span> <span>Remove Employee</span></a>
+                <a href=""> <span class="bx bx-store"></span> <span>Create New Store</span></a>
+                <a href=""> <span class="bx bx-edit"></span> <span>Edit Store</span></a>
+                <a href=""> <span class="bx bx-trash-alt"></span> <span>Delete Store</span></a>
+            </div>
+        </div>
+
+        <div>
+
+            <div class="user-info">
+                <div class="profile-img">
+                    <img src="../static/profileimgs/man.png" alt="">
+                </div>
+                <div class="info">
+                    <p class="lg">Admin</p>
+                    <p class="sm">Application administrator</p>
+                </div>
+            </div>
+            <div class="options-box">
+                <a href=""> <span class="bx bx-log-out"></span> <span>Logout</span></a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="main-window">
+
+        <div class="title-bar">
+            <h2>Hello, Admin</h2>
+            <h3><span class="bx bx-user"></span><span>Admin panel</span></h3>
+        </div>
+
+        <h3 class="app-title">Dashboard</h3>
+
+        <!-- Create Employee -->
+        <label class="custom-label" style="margin-top: 10px;">Employee Name</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 15px;">Gender</label>
+        <label class="custom-dropdown" for="gender">
+            <input id="gender" type="text" name="store">
+            <div class="arrow"></div>
+            <div class="options-list">
+                <button class="option">Male</button>
+                <button class="option">Female</button>
+            </div>
+        </label>
+
+        <label class="custom-label" style="margin-top: 20px;">Contact Number</label>
+        <input type="number" min="1111111111" max="9999999999" name="" id="" class="custom-input mb-no">
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Create</button>
+        </div>
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+
+        <!-- Delete Employee -->
+
+        <label class="custom-label" style="margin-top: 15px;">Choose Employee</label>
+        <label class="custom-dropdown" for="choose-emp">
+            <input id="choose-emp" type="text" name="store">
+            <div class="arrow"></div>
+            <div class="options-list">
+                <button class="option">Person 1</button>
+                <button class="option">Person 2</button>
+            </div>
+        </label>
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Remove Employee</button>
+        </div>
+
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+
+        <!-- Create Store -->
+
+        <label class="custom-label">Store name</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 20px;">Location</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 20px;">Services</label>
+        <div
+            style="display: flex;align-items: center;justify-content: space-between;margin-top: 10px;padding: 15px;border: 1px solid lightgray;border-radius: 10px;">
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-task">
+                <label for="pending-task">Mobile Recharge</label>
+            </div>
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-ammount">
+                <label for="pending-ammount">Dth Recharge</label>
+            </div>
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-ammount">
+                <label for="pending-ammount">Online Service</label>
+            </div>
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-ammount">
+                <label for="pending-ammount">Product Sale</label>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button class="custom-btn">Create store</button>
+        </div>
+
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+
+        <!-- Edit Store -->
+
+        <label class="custom-label" style="margin-top: 15px;">Choose Employee</label>
+        <label class="custom-dropdown" for="choose-emp">
+            <input id="choose-emp" type="text" name="store">
+            <div class="arrow"></div>
+            <div class="options-list">
+                <button class="option">Store 1</button>
+                <button class="option">Store 2</button>
+            </div>
+        </label>
+
+        <label class="custom-label" style="margin-top: 20px;">Store name</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 20px;">Location</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 20px;">Services</label>
+        <div
+            style="display: flex;align-items: center;justify-content: space-between;margin-top: 10px;padding: 15px;border: 1px solid lightgray;border-radius: 10px;">
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-task">
+                <label for="pending-task">Mobile Recharge</label>
+            </div>
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-ammount">
+                <label for="pending-ammount">Dth Recharge</label>
+            </div>
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-ammount">
+                <label for="pending-ammount">Online Service</label>
+            </div>
+
+            <div class="custom-checkbox">
+                <input type="checkbox" name="" id="pending-ammount">
+                <label for="pending-ammount">Product Sale</label>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button class="custom-btn">Save changes</button>
+        </div>
+
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+
+        <!-- Delete Employee -->
+
+        <label class="custom-label" style="margin-top: 15px;">Choose Store</label>
+        <label class="custom-dropdown" for="choose-emp">
+            <input id="choose-emp" type="text" name="store">
+            <div class="arrow"></div>
+            <div class="options-list">
+                <button class="option">Store 1</button>
+                <button class="option">Store 2</button>
+            </div>
+        </label>
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Remove Employee</button>
+        </div>
+
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+
+        <!-- Edit Profile -->
+         
+        <label class="custom-label" style="margin-top: 15px;">Contact number</label>
+        <input type="text" name="" id="" class="custom-input" disabled>
+
+        <label class="custom-label" style="margin-top: 15px;">Contact number</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 15px;">Title</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 15px;">Profile image</label>
+
+        <div class="profile-img-chooser">
+
+            <label for="prf_img_1">
+                <input type="radio" name="profile-img" id="prf_img_1">
+                <div class="img-sample">
+                    <img src="../static/profileimgs/man.png" alt="">
+                </div>
+            </label>
+
+            <label for="prf_img_2">
+                <input type="radio" name="profile-img" id="prf_img_2">
+                <div class="img-sample">
+                    <img src="../static/profileimgs/female_1.png" alt="">
+                </div>
+            </label>
+
+            <label for="prf_img_3">
+                <input type="radio" name="profile-img" id="prf_img_3">
+                <div class="img-sample">
+                    <img src="../static/profileimgs/female_2.png" alt="">
+                </div>
+            </label>
+
+            <label for="prf_img_4">
+                <input type="radio" name="profile-img" id="prf_img_4">
+                <div class="img-sample">
+                    <img src="../static/profileimgs/male_1.png" alt="">
+                </div>
+            </label>
+
+        </div>
+
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Save Changes</button>
+        </div>
+
+        <!-- ======================================================================== -->
+        <br>
+        <hr>
+        <br>
+
+        <!-- Edit Password -->
+        <label class="custom-label" style="margin-top: 15px;">Current Password</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 15px;">New Password</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <label class="custom-label" style="margin-top: 15px;">Confirm Password</label>
+        <input type="text" name="" id="" class="custom-input">
+
+        <div style="margin-top: 15px;">
+            <button class="custom-btn">Save</button>
+        </div>
+
+    </div>
+
+    <div class="notification active red">
+        <p class="msg">Data stored successfully.</p>
+        <span class="bx bx-x"></span>
+    </div>
+
+
+</body>
+
+</html>

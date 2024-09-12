@@ -1,0 +1,34 @@
+{% extends 'store_panel_base.html' %}
+{% block main_window %}
+<h3 class="dash-title">Mobile Recharge</h3>
+
+<!-- Mobile Recharge -->
+<form action="{% url 'mobile_recharge' %}" method="post">
+
+    {% csrf_token %}
+
+    <label class="custom-label" style="margin-top: 10px;">Mobile Number</label>
+    <input type="number" min="1111111111" max="9999999999" name="mobile_no" class="custom-input mb-no">
+
+    <label class="custom-label" style="margin-top: 15px;">Choose Operator</label>
+    <div class="custom-dropdown" >
+        <input type="text" placeholder="Choose Operator" name="operator_name" readonly>
+        <div class="arrow"></div>
+        <ul class="options-list">
+            <li class="option">Airtel</li>
+            <li class="option">BSNL</li>
+            <li class="option">Jio</li>
+            <li class="option">VI</li>
+        </ul>
+    </div>
+
+    <label class="custom-label" style="margin-top: 20px;">Amount</label>
+    <input type="number" min="0" max="5000" name="amount" class="custom-input">
+
+    <div style="margin-top: 15px;">
+        <button class="custom-btn">Pay amount</button>
+    </div>
+
+</form>
+
+{% endblock %}

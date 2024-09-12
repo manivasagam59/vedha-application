@@ -1,0 +1,74 @@
+{% extends 'dash_template.html' %}
+{% load static %}
+
+{% block title%}
+<title>Admin Dashboard</title>
+{% endblock %}
+
+{% block sidebar_content %}
+
+<div>
+    
+    <div class="options-box">
+        <a href="{% url 'admin_dashboard' %}" {% if active_page == "dashboard" %} class="active" {% endif %}> <span class="bx bx-home-alt"></span> <span>Dashboard</span></a>
+        <a href="{% url 'create_employee' %}" {% if active_page == "add_employee" %} class="active" {% endif %}> <span class="bx bx-user-plus"></span> <span>Add Employee</span></a>
+        <a href="{% url 'remove_employee' %}" {% if active_page == "remove_employee" %} class="active" {% endif %}> <span class="bx bx-user-minus"></span> <span>Remove Employee</span></a>
+        <a href="{% url 'create_store' %}" {% if active_page == "create_store" %} class="active" {% endif %}> <span class="bx bx-store"></span> <span>Create New Store</span></a>
+        <a href="{% url 'edit_store' %}" {% if active_page == "edit_store" %} class="active" {% endif %}> <span class="bx bx-edit"></span> <span>Edit Store</span></a>
+        <a href="{% url 'delete_store' %}" {% if active_page == "delete_store" %} class="active" {% endif %}> <span class="bx bx-trash-alt"></span> <span>Delete Store</span></a>
+    </div>
+
+</div>
+
+<div>
+
+    <a href="{% url 'edit_profile' %}" class="user-info">
+        <div class="profile-img">
+            <img src="{% static 'profileimgs/' %}{{ user_img }}" alt="">
+        </div>
+        <div class="info">
+            <p class="lg">{{ user_name }}</p>
+            <p class="sm">Application administrator</p>
+        </div>
+    </a>
+    <div class="options-box">
+        <a href="{% url 'logout' %}"> <span class="bx bx-log-out"></span> <span>Logout</span></a>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block main_window_top %}
+    <div class="title-bar">
+        <h2>Hello, Admin</h2>
+        <h3><span class="bx bx-user"></span><span>Admin panel</span></h3>
+    </div>
+
+    {% if action_msg != "" %}
+    <div class="notification {% if msg_code == 'ok' %} green {% elif msg_code == 'no' %} red {% endif %}">
+        <p class="msg">{{ action_msg }}</p>
+        <span class="bx bx-x"></span>
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block main_window %}
+
+
+{% endblock %}
+
+{% block js_scripts %}
+
+    let notifier = document.getElementsByClassName("notification")[0];
+    if (notifier != []) {
+        let cls_btn = notifier.children[1];
+        cls_btn.addEventListener("click", () => {
+            notifier.classList.remove("red");
+            notifier.classList.remove("green");
+        })
+    }
+
+{% endblock %}

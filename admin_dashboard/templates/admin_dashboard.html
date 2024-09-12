@@ -1,0 +1,46 @@
+{% extends "admin_panel_base.html" %}
+{% block main_window %}
+<h3 class="dash-title">Stores list</h3>
+{% if stores %}
+    <table class="custom-table">
+        <tr>
+            <th>Store name</th>
+            <th>Mobile recharge</th>
+            <th>Dth Recharge</th>
+            <th>Online Service</th>
+            <th>Product Sale</th>
+        </tr>
+        {% for i in stores %}
+        <tr>
+            {% for j in i %}
+            <td>{% if j == 1 %} ✅ Available {% elif j != 0 %} {{ j|capfirst }}  {% else %} ❌ Unavailable {% endif %}</td>
+            {% endfor %}
+        </tr>    
+        {% endfor %}
+    </table>
+{% else %}
+    <p class='no-data-found'>No Stores Found!</p>
+{% endif %}
+
+<br>
+
+<h3 class="dash-title">Employees list</h3>
+{% if users %}
+    <table class="custom-table">
+        <tr>
+            <th class="left">Employee name</th>
+            <th class="left">Gender</th>
+            <th class="left">Contact number</th>
+        </tr>
+        {% for i in users %}
+        <tr>
+            {% for j in i %}
+            <td class="left">{{ j }}</td>
+            {% endfor %}
+    </tr>    
+        {% endfor %}
+    </table>
+{% else %}
+    <p class='no-data-found'>No Employees Found!</p>
+{% endif %}
+{%  endblock %}

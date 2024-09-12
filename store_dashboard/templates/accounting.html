@@ -1,0 +1,157 @@
+{% extends 'store_panel_base.html' %}
+{% block main_window %}
+
+<form action="{% url 'accounting' %}" method="get"
+    style="display: flex;margin-top: 15px;gap: 15px;margin-bottom: 20px;">
+
+    <div>
+        <label class="custom-label">Choose Date</label>
+        <input type="date" name="report_date" style="width: auto;" id="date_picker" {% if max_date %} max="{{ max_date }}" {% endif %} {% if min_date %} min="{{ min_date }}" {% endif %} {% if select_date %} value="{{ select_date }}" {% endif %} class="custom-input" required>
+    </div>
+
+    <div style="flex-grow: 1;">
+        <label class="custom-label">Choose service</label>
+        <div class="custom-dropdown">
+            <input type="text" placeholder="Choose service" id="service_chooser" {% if select_service %}
+                value="{{ select_service }}" {% endif %} name="service_name" readonly>
+            <div class="arrow"></div>
+            <ul class="options-list" id="product_list">
+                <button class="option">Total earning of the day</button>
+                {% if mb_recharge %}
+                <button class="option">Mobile recharge</button>
+                {% endif %}
+                {% if dth_recharge %}
+                <button class="option">Dth recharge</button>
+                {% endif %}
+                {% if online_services %}
+                <button class="option">Online service</button>
+                {% endif %}
+                {% if product_sales %}
+                <button class="option">Product sale</button>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+
+</form>
+
+<hr>
+
+{% if view == 'mobile_recharge' %}
+
+{% if data_list %}
+<table class="custom-table" style="margin-top: 20px;">
+    <tr>
+        <th class="left">Mobile Number</th>
+        <th class="left">Operator</th>
+        <th class="right">Amount</th>
+    </tr>
+    {% for i in data_list %}
+    <tr>
+        {% for j in i %}
+        <td class="{% cycle 'num left' 'left' 'right' %}">{{ j }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr style="#f1ffe2">
+        <td colspan="2" class="left">Total revenue</td>
+        <td class="right">{{ total_amount }}</td>
+    </tr>
+
+</table>
+{% else %}
+<p class="no-data-found">No Mobile recharge done!</p>
+{% endif %}
+
+{% elif view == 'dth_recharge' %}
+
+{% if data_list %}
+<table class="custom-table" style="margin-top: 20px;">
+    <tr>
+        <th class="left">DTH Number</th>
+        <th class="left">Operator</th>
+        <th class="right">Amount</th>
+    </tr>
+    {% for i in data_list %}
+    <tr>
+        {% for j in i %}
+        <td class="{% cycle 'num left' 'left' 'right' %}">{{ j }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr style="#f1ffe2">
+        <td colspan="2" class="left">Total revenue</td>
+        <td class="right">{{ total_amount }}</td>
+    </tr>
+
+</table>
+{% else %}
+<p class="no-data-found">No Dth recharge done!</p>
+{% endif %}
+
+{% elif view == 'services' %}
+
+{% if data_list %}
+<table class="custom-table" style="margin-top: 20px;">
+    <tr>
+        <th class="left">Service name</th>
+        <th class="right">Amount</th>
+    </tr>
+    {% for i in data_list %}
+    <tr>
+        {% for j in i %}
+        <td class="{% cycle 'left' 'right' %}">{{ j }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr style="background-color: #f1ffe2;">
+        <td class="left">Total revenue</td>
+        <td class="right">{{ total_amount }}</td>
+    </tr>
+
+</table>
+{% else %}
+<p class="no-data-found">No Service work done!</p>
+{% endif %}
+
+{% elif view == 'product_sale' %}
+
+{% if data_list %}
+<table class="custom-table" style="margin-top: 20px;">
+    <tr>
+        <th class="left">Bill ID</th>
+        <th class="center"></th>
+        <th class="right">Amount</th>
+    </tr>
+    {% for i in data_list %}
+    <tr>
+        <td class="left">{{ i.id }}</td>
+        <td class="center"><a href="{% url 'bill_view' i.id %}" class="bx bx-receipt"></a></td>
+        <td class="right">{{ i.amount }}</td>
+    </tr>
+    {% endfor %}
+    <tr style="background-color: #f1ffe2;">
+        <td class="left" colspan="2">Total revenue</td>
+        <td class="right">{{ total_amount }}</td>
+    </tr>
+
+</table>
+{% else %}
+<p class="no-data-found">No Products sale in this date!</p>
+{% endif %}
+
+
+{% endif %}
+
+{% endblock %}
+
+{% block app_js_scripts %}
+
+let date_picker=document.getElementById("date_picker");
+let service_chooser=document.getElementById("service_chooser");
+date_picker.onchange=()=>{
+service_chooser.value=""
+}
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'components.css' %}">
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Poppins",sans-serif;
+        }
+    </style>
+    <title> Bill - {{ title }}</title>
+</head>
+<body>
+
+    {% if bill %}
+    <table class="custom-table">
+
+        <tr>
+            <th class="left">Product name</th>
+            <th class="right">Rate</th>
+            <th class="right">Quantity</th>
+            <th class="right">Price</th>
+        </tr>
+        
+        {% for i in bill %}
+        <tr>
+            <td class="left">{{ i.product_name }}</td>
+            <td class="right">{{ i.rate }}</td>
+            <td class="right">{{ i.quantity }}</td>
+            <td class="right">{{ i.total }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="background-color: #f1ffe2;">
+            <td colspan="3" class="left">Grand total</td>
+            <td class="right">{{ total }}</td>
+        </tr>
+
+    </table>
+    {% else %}
+        <h2 style="text-align: center;padding: 50px 50px;color: indianred;">No bill found, Invalid bill id</h2>
+    {% endif %}
+
+
+    
+</body>
+</html>

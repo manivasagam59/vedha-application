@@ -1,0 +1,247 @@
+{% extends 'store_panel_base.html' %}
+{% block main_window %}
+<h3 class="dash-title">Product sales</h3>
+
+<div style="display: flex;">
+
+    <div style="width: 400px;">
+
+        <label class="custom-label">Choose Product</label>
+        <div class="custom-dropdown" >
+            <input type="text" placeholder="Choose product" name="store" aria-label="" id="product"
+                onfocusout="focus_outed()">
+            <div class="arrow"></div>
+            <ul class="options-list" id="product_list">
+                {% for i in products %}
+                    <ol class="option" aria-label="{{ i.id }}">{{ i.product_name }}</ol>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <label class="custom-label" style="margin-top: 20px;">Rate</label>
+        <input type="number" min="0" name="" class="custom-input" id="p_rate" disabled>
+
+        <label class="custom-label" style="margin-top: 20px;">Quantity</label>
+        <div style="display: flex;">
+            <button class="custom-btn" style="border-radius: 5px 0px 0px 5px;" id="decrementer"><span class="bx bx-minus"></span></button>
+            <input type="text" min="0" max="0" value="0" class="custom-input" style="border-radius: 0px;text-align: center;" id="quantity" disabled>
+            <button class="custom-btn" style="border-radius: 0px 5px 5px 0px;" id="incrementer"><span class="bx bx-plus"></span></button>
+        </div>
+
+        <label class="custom-label" style="margin-top: 20px;">Price</label>
+        <input type="number"  value="0" class="custom-input" id="q_price" disabled>
+
+        <div style="margin-top: 20px;">
+            <button class="custom-btn" id="add_product_btn">Add Product</button>
+        </div>
+
+    </div>
+
+    <div style="flex-grow: 1; margin-left: 20px;">
+
+        <label class="custom-label" style="margin-bottom: 5px;">Products in cart</label>
+
+        <div class="cart-table" style="max-height: 400px;overflow-y: auto;">
+            <table class="custom-table" id="cart_list_table">
+
+                <tr style="display: sticky;top: 0;">
+                    <th class="center">Sn</th>
+                    <th class="left">Product Name</th>
+                    <th class="right">Rate</th>
+                    <th class="right">Quantity</th>
+                    <th class="right">Price</th>
+                </tr>
+                <tr><td class="center" colspan='5'>No products in cart</td></tr>
+
+            </table>
+
+        </div>
+        <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center; ">
+            <button class="custom-btn" id="purchase_btn">Pay amount</button>
+            <button class="custom-btn secondary" id="clear_all">Clear all</button>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+{% block app_js_scripts %}
+
+//<script>
+    let cart=[];
+
+    let product_select_inp=document.getElementById("product");
+    let product_list=document.getElementById("product_list");
+
+    
+    let rate=document.getElementById("p_rate");
+    let quantity_input=document.getElementById("quantity");
+    let quantity_increment=document.getElementById("incrementer");
+    let quantity_decrement=document.getElementById("decrementer");
+    let q_price=document.getElementById("q_price");
+    let add_product_btn=document.getElementById("add_product_btn");
+    let cart_table=document.getElementById("cart_list_table");
+    let clear_all=document.getElementById("clear_all");
+    let purchase_btn=document.getElementById("purchase_btn");
+    
+
+    quantity_decrement.addEventListener("click",()=>{
+        if(Number(quantity_input.value)>0){
+            quantity_input.value=Number(quantity_input.value)-1;
+            q_price.value=Number(quantity_input.value)*Number(rate.value);
+        }
+    })
+
+    quantity_increment.addEventListener("click",()=>{
+        if(Number(quantity_input.value)<Number(quantity_input.max)){
+            quantity_input.value=Number(quantity_input.value)+1;
+            q_price.value=Number(quantity_input.value)*Number(rate.value);
+        }
+    })
+
+    product_select_inp.onvaluechange=(e)=>{
+            product_select_inp.selected = true
+            product_select_inp.ariaLabel=e.ariaLabel;
+            
+            // Product info Requesting
+            let frm=new FormData();
+            frm.append("csrfmiddlewaretoken",'{{csrf_token}}');
+            frm.append("product_id",product_select_inp.ariaLabel);
+            let rq=new XMLHttpRequest();
+            rq.open("POST","{% url 'product_sales' %}");
+            rq.send(frm);
+            rq.onreadystatechange=()=>{
+                if(rq.readyState==4 && rq.status==200){
+                    console.log(rq.responseText);
+                    let data=JSON.parse(rq.responseText);
+                    rate.value=Number(data.rate);
+                    quantity_input.max=data.max_quantity
+                }
+            }
+
+    }
+
+    function focus_outed() {
+        if (product_select_inp.selected == false) {
+            product_select_inp.value = ""
+            rate.value=0
+            quantity_input.value=0
+            quantity_input.max=0
+            q_price.value=0
+        }
+        for (let i = 0; i < product_list.children.length; i++) {
+            product_list.children[i].style.display = "block";
+        }
+    }
+
+    product_select_inp.onkeyup = () => {
+        product_select_inp.selected = false
+        prd = product_select_inp.value.toLowerCase();
+        rate.value=0
+        quantity_input.value=0
+        quantity_input.max=0
+        q_price.value=0
+        for (let i = 0; i < product_list.children.length; i++) {
+            if (product_list.children[i].innerText.toLowerCase().indexOf(prd) == -1) {
+                product_list.children[i].style.display = "none";
+            } else {
+                product_list.children[i].style.display = "block";
+            }
+        }
+        
+    }
+
+    function set_cart_list_view(){
+        let Total=0;
+
+            cart_table.innerHTML=`<tr style="display: sticky;top: 0;">
+                    <th class="center">Sn</th>
+                    <th class="left">Product Name</th>
+                    <th class="right">Rate</th>
+                    <th class="right">Quantity</th>
+                    <th class="right">Price</th>
+                </tr>`;
+            if(cart.length!=0){
+                for(let i=0;i<cart.length;i++){
+                    let price=cart[i].rate * cart[i].quantity;
+                    let temp=`<tr>
+                        <td class="center">${i+1}</td>
+                        <td class="left">${cart[i].product_name}</td>
+                        <td class="right">${cart[i].rate}</td>
+                        <td class="right">${cart[i].quantity}</td>
+                        <td class="right">${price}</td>
+                    </tr>`;
+                    cart_table.insertAdjacentHTML("beforeend",temp);
+                    Total+=price;
+                }
+                cart_table.insertAdjacentHTML("beforeend",`<tr><td class="left" colspan='4'>Total price of products in cart</td><td class="right">${Total}</td></tr>`)
+            }else{
+                cart_table.insertAdjacentHTML("beforeend",`<tr><td class="center" colspan='5'>No products in cart</td></tr>`)
+            }
+
+    }
+
+    add_product_btn.addEventListener("click",()=>{
+        if(product_select_inp.selected && product_select_inp.ariaLabel!="" && rate.value!=0 && quantity_input.value!=0){
+            
+            // Check product already exists 
+            let found_index=-1
+            for(let i=0;i<cart.length;i++){
+                if(cart[i].id==product_select_inp.ariaLabel){
+                    found_index=i;
+                    break;
+                }
+            }
+            if(found_index!=-1){
+                cart[found_index].rate=Number(rate.value);
+                cart[found_index].quantity=cart[found_index].quantity+Number(quantity.value);
+            }else{
+                cart.push({"id":product_select_inp.ariaLabel,"product_name":product_select_inp.value,"rate":Number(rate.value),"quantity":Number(quantity.value)});
+            }
+
+            // Create cart view
+            set_cart_list_view()
+
+            // Reset Fields
+            product_select_inp.value = ""
+            rate.value=0
+            quantity_input.value=0
+            quantity_input.max=0
+            q_price.value=0
+        }
+        // console.log(cart);
+    });
+
+    clear_all.addEventListener("click",()=>{
+        cart=[];
+        product_select_inp.value = "";
+        rate.value=0;
+        quantity_input.value=0;
+        quantity_input.max=0;
+        q_price.value=0;
+        // create cart view
+        set_cart_list_view();
+    });
+
+    purchase_btn.addEventListener("click",()=>{
+        // Product info Requesting
+        let frm=new FormData();
+        frm.append("csrfmiddlewaretoken",'{{csrf_token}}');
+        frm.append("purchase_list",JSON.stringify(cart));
+        let rq=new XMLHttpRequest();
+        rq.open("POST","{% url 'product_sales' %}");
+        rq.send(frm);
+        rq.onreadystatechange=()=>{
+            if(rq.readyState==4 && rq.status==200){
+                window.location.reload();                
+            }
+        }
+    })
+
+
+
+
+{% endblock %}

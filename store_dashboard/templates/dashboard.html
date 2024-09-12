@@ -1,0 +1,107 @@
+{% extends 'store_panel_base.html' %}
+{% block main_window %}
+
+<h2 style="color: #2f2f2f;">{{current_month}} {{current_year}}</h2>
+
+<div style="display: flex;justify-content: space-between;flex-wrap: wrap;gap: 15px;margin-top: 15px;">
+
+        
+    {% if mb_recharge %}
+    <div class="smart-card">
+        <span class="bx bx-mobile-alt"></span>
+        <div>
+            <p class="lg-txt">Mobile recharge</p>
+            <p class="sm-txt">Rs. {{ monthly_overview.mb_total }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if dth_recharge %}
+    <div class="smart-card">
+        <span class="bx bx-broadcast"></span>
+        <div>
+            <p class="lg-txt">Dth recharge</p>
+            <p class="sm-txt">Rs. {{ monthly_overview.dth_total }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if online_services %}
+    <div class="smart-card">
+        <span class="bx bx-world"></span>
+        <div>
+            <p class="lg-txt">Online services</p>
+            <p class="sm-txt">Rs. {{ monthly_overview.os_total }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if product_sales %}
+    <div class="smart-card">
+        <span class="bx bx-cart"></span>
+        <div>
+            <p class="lg-txt">Product sales</p>
+            <p class="sm-txt">Rs. {{ monthly_overview.ps_total }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="smart-card">
+        <span class="bx bx-chalkboard"></span>
+        <div>
+            <p class="lg-txt">Total sales and services</p>
+            <p class="sm-txt">Rs. {{ monthly_overview.all_total }}</p>
+        </div>
+    </div>
+
+</div>
+
+<hr style="margin: 20px 0;">
+
+{% if monthly_reports %}
+
+    <table class="custom-table">
+        <tr>
+            <th class="left">Date</th>
+            {% if mb_recharge %}
+            <th class="right">Mobile recharge</th>
+            {% endif %}
+            {% if dth_recharge %}
+            <th class="right">Dth recharge</th>
+            {% endif %}
+            {% if online_services %}
+            <th class="right">Online service</th>
+            {% endif %}
+            {% if product_sales %}
+            <th class="right">Product sale</th>
+            {% endif %}
+            <th class="right">Total</th>
+        </tr>
+
+        {% for i in monthly_reports %}
+        <tr>
+            <td class="left">{{ i.date }}</td>
+            {% if mb_recharge %}
+            <td class="right">{{ i.mb }}</td>
+            {% endif %}
+            {% if dth_recharge %}
+            <td class="right">{{ i.dth }}</td>
+            {% endif %}
+            {% if online_services %}
+            <td class="right">{{ i.os }}</td>
+            {% endif %}
+            {% if product_sales %}
+            <td class="right">{{ i.ps }}</td>
+            {% endif %}
+            <td class="right">{{ i.total }}</td>
+        </tr>
+        {% endfor %}
+        
+    </table>
+
+
+{% else %}
+<p class="no-data-found">No Data found!</p>
+{% endif %}
+
+{% endblock %}

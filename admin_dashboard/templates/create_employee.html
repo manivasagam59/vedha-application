@@ -1,0 +1,29 @@
+{% extends "admin_panel_base.html" %}
+{% block main_window %}
+<h3 class="app-title">Add new Employee</h3>
+
+<!-- Create Employee -->
+<form action="{% url 'create_employee' %}" method="POST">
+    {% csrf_token %} 
+    <label class="custom-label" style="margin-top: 10px;">Employee Name</label>
+    <input type="text" name="employee_name" id="" class="custom-input" required="true">
+
+    <label class="custom-label" style="margin-top: 15px;">Gender</label>
+    <div class="custom-dropdown">
+        <input type="text" name="gender" readonly>
+        <div class="arrow"></div>
+        <ul class="options-list">
+            <li class="option">Male</li>
+            <li class="option">Female</li>
+        </ul>
+    </div>
+
+    <label class="custom-label" style="margin-top: 20px;">Contact Number</label>
+    <input type="number" min="1111111111" max="9999999999" name="contact_no" class="custom-input mb-no">
+
+    <div style="margin-top: 15px;">
+        <button class="custom-btn">Create</button>
+    </div>
+
+</form>
+{% endblock %}

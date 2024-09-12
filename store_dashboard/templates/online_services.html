@@ -1,0 +1,67 @@
+{% extends 'store_panel_base.html' %}
+{% block main_window %}
+<h3 class="dash-title">Online services</h3>
+
+<!-- DTH Recharge -->
+<form action="{% url 'online_services' %}" method="post">
+
+    {% csrf_token %}
+
+    <!-- Online Services -->
+
+    <label class="custom-label" style="margin-top: 15px;">Choose Service</label>
+    <div class="custom-dropdown">
+        <input type="text" placeholder="Choose service" id="services" name="service_name" readonly>
+        <div class="arrow"></div>
+        <ul class="options-list">
+            <li class="option">Aadhar Service</li>
+            <li class="option">PAN Service</li>
+            <li class="option">Photo print</li>
+            <li class="option">Votor Service</li>
+            <li class="option">Xerrox</li>
+            <li class="option">Other</li>
+        </ul>
+    </div>
+
+    <div id="describe-inps" style="display: none;">
+        <label class="custom-label" style="margin-top: 20px;">Describe</label>
+        <input type="text" name="service-description" class="custom-input">
+    </div>
+
+    <label class="custom-label" style="margin-top: 20px;">Amount</label>
+    <input type="number" min="0" max="5000" name="amount" class="custom-input">
+
+    <!-- 
+    <div class="custom-checkbox" style="margin-top: 20px;">
+        <input type="checkbox" name="" id="pending-task">
+        <label for="pending-task">Add as a Pending task</label>
+    </div>
+
+    <div class="custom-checkbox" style="margin-top: 20px;">
+        <input type="checkbox" name="" id="pending-ammount">
+        <label for="pending-ammount">Add as a Pending Payment</label>
+    </div>
+    -->
+
+    <div style="margin-top: 15px;">
+        <button class="custom-btn">Pay amount</button>
+    </div>
+
+    
+</form>
+
+{% endblock %}
+
+{% block app_js_scripts %}
+
+let services_inp=document.getElementById("services");
+describe_inp_block=document.getElementById("describe-inps");
+services_inp.onvaluechange=()=>{
+    if(services_inp.value.toLowerCase()=="other"){
+        describe_inp_block.style.display="block";
+    }else{
+        describe_inp_block.style.display="none";
+    }
+}
+
+{% endblock %}

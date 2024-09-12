@@ -1,0 +1,67 @@
+{% extends "admin_panel_base.html" %}
+{% load static %}
+{% block main_window %}
+
+<!-- Edit Profile -->
+<h3 class="dash-title">Edit profile</h3>
+<form action="{% url 'edit_profile' %}" method="post">
+    {% csrf_token %}
+
+    <input type="hidden" name="form_type" value="profile_edit">
+
+    <label class="custom-label" style="margin-top: 15px;">Name</label>
+    <input type="text" name="" class="custom-input" value="{{ user_name }}" disabled>
+
+    <label class="custom-label" style="margin-top: 15px;">Contact number</label>
+    <input type="number" name="contact-no" min="1111111111" max="9999999999"  class="custom-input mb-no" value="{{ user_contact_no }}">
+
+    <!-- 
+    <label class="custom-label" style="margin-top: 15px;">Title</label>
+    <input type="text" name="" id="" class="custom-input">
+     -->
+
+    <label class="custom-label" style="margin-top: 15px;">Profile image</label>
+
+    <div class="profile-img-chooser">
+        
+        {% for img in profile_images %}
+        <label for="prf_img_{{ forloop.counter }}">
+            <input type="radio" name="profile-img" id="prf_img_{{ forloop.counter }}" value="{{ img }}" {% if img == user_profile_img %} checked="true" {% endif %}>
+            <div class="img-sample">
+                <img src="{% static 'profileimgs/' %}{{ img }}" alt="">
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+
+
+    <div style="margin-top: 15px;">
+        <button class="custom-btn">Save Changes</button>
+    </div>
+</form>
+
+<br>
+<h3 class="dash-title">Change Password</h3>
+
+<!-- Edit Password -->
+<form action="{% url 'edit_profile' %}" method="post">
+    {% csrf_token %}
+
+    <input type="hidden" name="form_type" value="password_edit">
+
+    <label class="custom-label" style="margin-top: 15px;">Current Password</label>
+    <input type="password" name="curr_pass" class="custom-input">
+
+    <label class="custom-label" style="margin-top: 15px;">New Password</label>
+    <input type="password" name="new_pass" class="custom-input">
+
+    <label class="custom-label" style="margin-top: 15px;">Confirm Password</label>
+    <input type="password" name="conf_pass" class="custom-input">
+
+    <div style="margin-top: 15px;">
+        <button class="custom-btn">Change password </button>
+    </div>
+
+</form>
+
+{% endblock %}
