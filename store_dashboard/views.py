@@ -124,7 +124,7 @@ def mobile_recharge(request):
                 request.session["msg_code"]="ok"
                 date=datetime.datetime.now()
                 mb_recharge_obj=MobileRecharge(request.session["store_name"],[date.year,date.month,date.day])
-                mb_recharge_obj.insert(request.POST["mobile_no"],request.POST["operator_name"],request.POST["amount"])
+                mb_recharge_obj.insert(request.POST["mobile_no"],request.POST["operator_name"],request.POST["amount"],request.session["user_name"].capitalize())
             
             return redirect("mobile_recharge")
 
@@ -158,7 +158,7 @@ def dth_recharge(request):
                 request.session["msg_code"]="ok"
                 date=datetime.datetime.now()
                 dth_recharge_obj=DthRecharge(request.session["store_name"],[date.year,date.month,date.day])
-                dth_recharge_obj.insert(request.POST["dth_no"],request.POST["operator_name"],request.POST["amount"])
+                dth_recharge_obj.insert(request.POST["dth_no"],request.POST["operator_name"],request.POST["amount"],request.session["user_name"].capitalize())
             
             return redirect("dth_recharge")
 
@@ -191,7 +191,7 @@ def online_services(request):
                 request.session["msg_code"]="ok"
                 date=datetime.datetime.now()
                 online_service_obj=OnlineService(request.session["store_name"],[date.year,date.month,date.day])
-                online_service_obj.insert(service_name,request.POST["amount"])
+                online_service_obj.insert(service_name,request.POST["amount"],request.session["user_name"].capitalize())
 
             return redirect("online_services")
         
@@ -229,7 +229,7 @@ def product_sales(request):
                     for i in data:
                         sm.purchase_product_by_id(i["id"],i["quantity"])
                         amount+=(i["quantity"]*i["rate"])
-                    ps.insert(request.POST["purchase_list"],amount)
+                    ps.insert(request.POST["purchase_list"],amount,request.session["user_name"].capitalize())
                     request.session["action_msg"]="Amount successfully paid."
                     request.session["msg_code"]="ok"
 

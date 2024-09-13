@@ -236,28 +236,29 @@ class MobileRecharge:
         self.db_path=path+"\\mobile_recharge.db"
         self.table_name="mb_"+year+month+day
         # print(self.db_path)
-
+  
     def open(self):
         self.connection=sqlite3.connect(self.db_path)
         self.cursor=self.connection.cursor()
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(ID INTEGER PRIMARY KEY AUTOINCREMENT, MobileNumber VARCHAR(100) NOT NULL, Operator VARCHAR(100) NOT NULL, Amount INTEGER NOT NULL)")
+        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(ID INTEGER PRIMARY KEY AUTOINCREMENT, MobileNumber VARCHAR(100) NOT NULL, Operator VARCHAR(100) NOT NULL, Amount INTEGER NOT NULL, WorkDoneBy VARCHAR(255) NOT NULL)")
 
     def close(self):
         self.connection.close()
 
     def check_table_exists(self):
-        self.open()
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
         result=self.cursor.execute(f"SELECT name FROM sqlite_schema WHERE type ='table' AND  name = '{self.table_name}';")
         data=result.fetchall()
-        self.close()
+        self.connection.close()
         if len(data)>0:
             return True
         else:
             return False
 
-    def insert(self,mobile_number,operator,amount):
+    def insert(self,mobile_number,operator,amount,work_done_by):
         self.open()
-        self.cursor.execute(f"INSERT INTO {self.table_name}(MobileNumber, Operator, Amount) VALUES(?,?,?)",[mobile_number,operator,amount])
+        self.cursor.execute(f"INSERT INTO {self.table_name}(MobileNumber, Operator, Amount, WorkDoneBy) VALUES(?,?,?,?)",[mobile_number,operator,amount,work_done_by])
         self.connection.commit()
         self.close()
 
@@ -303,24 +304,25 @@ class DthRecharge:
     def open(self):
         self.connection=sqlite3.connect(self.db_path)
         self.cursor=self.connection.cursor()
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(ID INTEGER PRIMARY KEY AUTOINCREMENT, DthNumber VARCHAR(100) NOT NULL, Operator VARCHAR(100) NOT NULL, Amount INTEGER NOT NULL)")
+        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(ID INTEGER PRIMARY KEY AUTOINCREMENT, DthNumber VARCHAR(100) NOT NULL, Operator VARCHAR(100) NOT NULL, Amount INTEGER NOT NULL, WorkDoneBy VARCHAR(255) NOT NULL)")
 
     def close(self):
         self.connection.close()
 
     def check_table_exists(self):
-        self.open()
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
         result=self.cursor.execute(f"SELECT name FROM sqlite_schema WHERE type ='table' AND  name = '{self.table_name}';")
         data=result.fetchall()
-        self.close()
+        self.connection.close()
         if len(data)>0:
             return True
         else:
             return False
 
-    def insert(self,dth_number,operator,amount):
+    def insert(self,dth_number,operator,amount,work_done_by):
         self.open()
-        self.cursor.execute(f"INSERT INTO {self.table_name}(DthNumber, Operator, Amount) VALUES(?,?,?)",[dth_number,operator,amount])
+        self.cursor.execute(f"INSERT INTO {self.table_name}(DthNumber, Operator, Amount, WorkDoneBy) VALUES(?,?,?,?)",[dth_number,operator,amount,work_done_by])
         self.connection.commit()
         self.close()
 
@@ -363,24 +365,25 @@ class OnlineService:
     def open(self):
         self.connection=sqlite3.connect(self.db_path)
         self.cursor=self.connection.cursor()
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(ID INTEGER PRIMARY KEY AUTOINCREMENT, ServiceName VARCHAR(255) NOT NULL, Amount INTEGER NOT NULL);")
+        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(ID INTEGER PRIMARY KEY AUTOINCREMENT, ServiceName VARCHAR(255) NOT NULL, Amount INTEGER NOT NULL, WorkDoneBy VARCHAR(255) NOT NULL)")
 
     def close(self):
         self.connection.close()
 
     def check_table_exists(self):
-        self.open()
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
         result=self.cursor.execute(f"SELECT name FROM sqlite_schema WHERE type ='table' AND  name = '{self.table_name}';")
         data=result.fetchall()
-        self.close()
+        self.connection.close()
         if len(data)>0:
             return True
         else:
             return False
 
-    def insert(self,service_name,amount):
+    def insert(self,service_name,amount,work_done_by):
         self.open()
-        self.cursor.execute(f"INSERT INTO {self.table_name}(ServiceName, Amount) VALUES(?,?)",[service_name,amount])
+        self.cursor.execute(f"INSERT INTO {self.table_name}(ServiceName, Amount, WorkDoneBy) VALUES(?,?,?)",[service_name,amount,work_done_by])
         self.connection.commit()
         self.close()
 
@@ -423,24 +426,25 @@ class ProductSales:
     def open(self):
         self.connection=sqlite3.connect(self.db_path)
         self.cursor=self.connection.cursor()
-        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(BillId INTEGER PRIMARY KEY AUTOINCREMENT, Bill TEXT NOT NULL, Amount INTEGER NOT NULL);")
+        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(BillId INTEGER PRIMARY KEY AUTOINCREMENT, Bill TEXT NOT NULL, Amount INTEGER NOT NULL, WorkDoneBy VARCHAR(255) NOT NULL)")
 
     def close(self):
         self.connection.close()
 
     def check_table_exists(self):
-        self.open()
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
         result=self.cursor.execute(f"SELECT name FROM sqlite_schema WHERE type ='table' AND  name = '{self.table_name}';")
         data=result.fetchall()
-        self.close()
+        self.connection.close()
         if len(data)>0:
             return True
         else:
             return False
 
-    def insert(self,bill,amount):
+    def insert(self,bill,amount,work_done_by):
         self.open()
-        self.cursor.execute(f"INSERT INTO {self.table_name}(Bill, Amount) VALUES(?,?)",[bill,amount])
+        self.cursor.execute(f"INSERT INTO {self.table_name}(Bill, Amount, WorkDoneBy) VALUES(?,?,?)",[bill,amount,work_done_by])
         self.connection.commit()
         self.close()
 
