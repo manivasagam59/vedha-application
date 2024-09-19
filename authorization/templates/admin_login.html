@@ -27,6 +27,7 @@
         <p>Enter your user name and password to login into the store.</p>
 
         <a href="{% url 'store_login' %}">Store login</a>
+        <a href="{% url 'stock_manager_login' %}">Stock manager login</a>
 
     </div>
 
@@ -35,14 +36,14 @@
         {% csrf_token %}
 
         <h2>Sign in</h2>
-        <input type="text" placeholder="User name" name="username">
-        <input type="password" placeholder="Password" name="password" class="mg-sm">
+        <input type="text" placeholder="User name" name="username" required>
+        <input type="password" placeholder="Password" name="password" class="mg-sm" required>
 
         <div class="remember-me">
             <input type="checkbox" name="remember" id="remember">
             <label for="remember">Remember Me</label>
         </div>
-        <button name="action" value="admin_login">Sign in</button>
+        <button>Sign in</button>
 
     </form>
 

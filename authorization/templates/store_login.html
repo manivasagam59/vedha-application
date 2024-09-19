@@ -27,8 +27,8 @@
         {% csrf_token %}
 
         <h2>Sign in</h2>
-        <input type="text" placeholder="User name" name="username">
-        <input type="password" placeholder="Password" name="password">
+        <input type="text" placeholder="User name" name="username" required>
+        <input type="password" placeholder="Password" name="password" required>
         <div class="custom-dropdown" >
             <input type="text" placeholder="Choose Store" name="store" readonly>
             <div class="arrow"></div>
@@ -43,7 +43,7 @@
             <label for="remember">Remember Me</label>
         </div>
 
-        <button name="action" value="store_login">Sign in</button>
+        <button>Sign in</button>
 
     </form>
 
@@ -53,6 +53,7 @@
         <p>Enter your user name and password to login into the store.</p>
 
         <a href="{% url 'admin_login' %}">Admin login</a>
+        <a href="{% url 'stock_manager_login' %}">Stock manager login</a>
     </div>
 
 </div>

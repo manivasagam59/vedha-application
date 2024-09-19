@@ -209,7 +209,6 @@ def edit_store(request):
         # Form Get Method Action
         if request.method=="GET" and "store_name" in request.GET:
             stores_data=store.get_store(request.GET["store_name"])
-            print(stores_data)
             context["selected_store_name"]=request.GET["store_name"]
             context["mbr_available"]=stores_data[1]
             context["dth_available"]=stores_data[2]

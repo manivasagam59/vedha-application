@@ -101,8 +101,8 @@ body {
     display: block;
     text-decoration: none;
     font-size: 14px;
-    padding: 8px 10px;
-    width: 50%;
+    padding: 8px 20px;
+    min-width: 50%;
     border-radius: 20px;
     background-color: transparent;
     color: #fff;
