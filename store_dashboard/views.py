@@ -1,9 +1,10 @@
 import datetime
 import json
 from django.shortcuts import render,redirect
-from modules.app import Users,UserDetail,Stores,MobileRecharge,DthRecharge,OnlineService,ProductSales,StockManagement
+from modules.app import Users,UserDetail,Stores,MobileRecharge,DthRecharge,OnlineService,ProductSales,StockManagement,Applications
 from modules.settings import get_store_dir
 from django.http import JsonResponse
+from modules import data
 
 # =====================================================================================
 # Login Checker function
@@ -187,20 +188,139 @@ def online_services(request):
                 request.session["action_msg"]="Invalid recharge amount"
                 request.session["msg_code"]="no"
             else:
+                Pay=True
                 request.session["action_msg"]="Service amount paid Successfully"
                 request.session["msg_code"]="ok"
                 date=datetime.datetime.now()
-                online_service_obj=OnlineService(request.session["store_name"],[date.year,date.month,date.day])
-                online_service_obj.insert(service_name,request.POST["amount"],request.session["user_name"].capitalize())
+
+                if request.POST["service_name"] in data.application_services:
+                    if request.POST["applicant_name"]=="" or len(request.POST["applicant_location"])<=3:
+                        request.session["action_msg"]="Some information not provided"
+                        request.session["msg_code"]="no"
+                        Pay=False  
+                    elif len(request.POST["applicant_contact_no"])!=10:
+                        request.session["action_msg"]="Invalid contact number detected"
+                        request.session["msg_code"]="no"
+                        Pay=False  
+                    else:
+                        application_obj=Applications(request.session["store_name"],date.year)
+                        application_obj.add_application(request.POST["service_name"].lower(),request.POST["applicant_name"],request.POST["applicant_location"],request.POST["applicant_contact_no"])
+                        request.session["action_msg"]="Application submitted and paid Successfully"
+                        request.session["msg_code"]="ok"
+
+                if Pay:
+                    online_service_obj=OnlineService(request.session["store_name"],[date.year,date.month,date.day])
+                    online_service_obj.insert(service_name,request.POST["amount"],request.session["user_name"].capitalize())
 
             return redirect("online_services")
         
         context=getContext(request)
         context["active_page"]="online_services"
+        context["services_list"]=data.online_services
+        context["application_services"]=data.application_services
         return render(request,"online_services.html",context)
     else:
         return redirect("/login")
 
+
+def applications(request):
+    if check_login(request):
+        if check_service(request,"online_services")==False:
+            return redirect("store_dashboard")
+        
+        context=getContext(request)
+        application_obj=Applications(request.session["store_name"],2024)
+        context["active_page"]="applications"
+        context["application_services"]=data.application_services
+        context["years"]=application_obj.get_application_available_years()
+
+        if request.method=="POST" and "update" in request.POST:
+            reference=request.POST["update"]
+            try:
+                year=int(reference[6:10])
+                id=int(reference[10:])
+                new_obj=Applications(request.session["store_name"],year)
+                temp=new_obj.update_application(request.POST["status"],request.POST["reference_no"],request.POST["issue"],id)
+                request.session["action_msg"]="Application updated"
+                request.session["msg_code"]="ok"
+            except:
+                request.session["action_msg"]="Something went wrong, retry"
+                request.session["msg_code"]="no"
+            
+            return JsonResponse({"load":True})
+
+        if request.method=="POST" and "application" in request.POST:
+            reference=request.POST["application"]
+            response_json={}
+            try:
+                year=int(reference[6:10])
+                id=int(reference[10:])
+                new_obj=Applications(request.session["store_name"],year)
+                temp=new_obj.get_application_detail(id)
+                response_json["application_no"]=reference
+                response_json["type"]=temp[1].capitalize()
+                response_json["applicant"]=temp[2]
+                response_json["applicant_location"]=temp[3]
+                response_json["contact_no"]=temp[4]
+                response_json["status"]=temp[5]
+                response_json["reference_id"]=temp[6]
+                response_json["remark"]=temp[7]
+            except:
+                response_json["application_no"]=reference
+                
+            return  JsonResponse(response_json)
+
+        if request.method=="POST" and "delete" in request.POST:
+            reference=request.POST["delete"]
+            try:
+                year=int(reference[6:10])
+                id=int(reference[10:])
+                new_obj=Applications(request.session["store_name"],year)
+                temp=new_obj.delete_application(id)
+                request.session["action_msg"]="Application deleted"
+                request.session["msg_code"]="ok"
+            except:
+                request.session["action_msg"]="Something went wrong, retry"
+                request.session["msg_code"]="no"
+                
+            return  JsonResponse({"load":True})
+
+        if request.method=="GET" and "year" in request.GET:
+            if request.GET["year"] == "":
+                request.session["action_msg"]="Year is required"
+                request.session["msg_code"]="no"
+            elif request.GET["application_name"] == "":
+                request.session["action_msg"]="Application type is required"
+                request.session["msg_code"]="no"
+            elif request.GET["status"] == "":
+                request.session["action_msg"]="Application status is required"
+                request.session["msg_code"]="no"
+            else:
+                application_type=request.GET["application_name"].lower()
+                if application_type=="all applications":
+                    application_type="*"
+                
+                application_status=request.GET["status"].lower()
+                if application_status=="all":
+                    application_status="*"
+                
+                temp=application_obj.get_applications_by_filter(application_type,application_status)
+                records=[]
+                for i in temp:
+                    temp=i[1].split(" ")[0].split("-")
+                    date=datetime.date(int(temp[0]),int(temp[1]),int(temp[2]))
+                    t_date=date.strftime("%d %b %Y")
+                    application_id="AP"+date.strftime("%d%m%Y")+str(i[0])
+                    records.append({"application_id":application_id,"date":t_date,"name":i[3],"location":i[4],"status":i[6]})
+                context["application_type"]=request.GET["application_name"].capitalize()
+                context["records"]=records
+                context["selected_year"]=request.GET["year"]
+                context["selected_application"]=request.GET["application_name"]
+                context["selected_status"]=request.GET["status"]
+
+        return render(request,"applications.html",context)
+    else:
+        return redirect("/login")
 
 # Product sale view
 def product_sales(request):
@@ -269,68 +389,6 @@ def bill_view(request,id):
 
         return render(request,"bill_view.html",context)
 
-# Stock management app
-def stock_management(request):
-    if check_login(request):
-        if check_service(request,"product_sale")==False:
-            return redirect("store_dashboard")
-        
-        context=getContext(request)
-        context["active_page"]="stock_management"
-        sm=StockManagement(request.session["store_name"])
-
-        # POST METHOD ACTIONS
-        if request.method=="POST":
-            if request.POST["action"]=="add":
-                if len(request.POST["product_name"])<=2:
-                    request.session["action_msg"]="Product name is required"
-                    request.session["msg_code"]="no"
-                elif int(request.POST["price"]) == 0:
-                    request.session["action_msg"]="Price is required"
-                    request.session["msg_code"]="no"
-                elif sm.check_stock_exists(request.POST["product_name"])==True:
-                    request.session["action_msg"]="Product name already found, try with another name"
-                    request.session["msg_code"]="no"
-                else:
-                    sm.add_stock(request.POST["product_name"],request.POST["price"],request.POST["quantity"],request.POST["min_stock"])
-                    request.session["action_msg"]="Product added to stocks"
-                    request.session["msg_code"]="ok"
-            
-            elif request.POST["action"]=="update":
-                if request.POST["product_id"]=="":
-                    request.session["action_msg"]="Something went wrong, try again"
-                    request.session["msg_code"]="no"
-                elif len(request.POST["product_name"])<=2:
-                    request.session["action_msg"]="Product name is required"
-                    request.session["msg_code"]="no"
-                elif int(request.POST["price"]) == 0:
-                    request.session["action_msg"]="Price is required"
-                    request.session["msg_code"]="no"
-                elif sm.check_stock_update_exists(request.POST["product_id"],request.POST["product_name"])==True:
-                    request.session["action_msg"]="Product name already found, try with another name"
-                    request.session["msg_code"]="no"
-                else:
-                    sm.update_stock(request.POST["product_id"],request.POST["product_name"],request.POST["price"],request.POST["quantity"],request.POST["min_stock"])
-                    request.session["action_msg"]="Product detail updated successfully"
-                    request.session["msg_code"]="ok"
-            elif request.POST["action"]=="delete":
-                if request.POST["product_id"]=="":
-                    request.session["action_msg"]="Something went wrong, try again"
-                    request.session["msg_code"]="no"
-                else:
-                    sm.delete_stock(request.POST["product_id"])
-                    request.session["action_msg"]="Product deleted successfully"
-                    request.session["msg_code"]="ok"
-
-            return redirect("stock_management")
-        
-        stocks=sm.get_all_stocks()
-        stocks=[{"id":i[0],"product_name":i[1].capitalize(), "price":i[2], "stock_quantity":i[3], "notification_at":i[4],"stock_price":i[2]*i[3]} for i in stocks]
-        context["stocks"]=stocks
-        context["total_stock_price"]=sm.get_total_sum()
-        return render(request,"stock_management.html",context)
-    else:
-        return redirect("/login")
 
 # Online Services view
 def accounting(request):
@@ -361,7 +419,32 @@ def accounting(request):
                 context["select_date"]=request.GET["report_date"]
                 context["select_service"]=service_name
                     
-                
+                if service_name =="Total earning of the day":
+                    
+                    store_object=Stores()
+                    store_detail=store_object.get_store(request.session["store_name"])
+                    totals={"all":0}
+
+                    if store_detail[1]:
+                        mbr_obj=MobileRecharge(request.session["store_name"],date)
+                        totals["mb"]=mbr_obj.get_total_sum()
+                        totals["all"]+=totals["mb"]
+                    if store_detail[2]:
+                        dth_obj=DthRecharge(request.session["store_name"],date)
+                        totals["dth"]=dth_obj.get_total_sum()
+                        totals["all"]+=totals["dth"]
+                    if store_detail[3]:
+                        os_obj=OnlineService(request.session["store_name"],date)
+                        totals["os"]=os_obj.get_total_sum()
+                        totals["all"]+=totals["os"]
+                    if store_detail[4]:
+                        ps_obj=ProductSales(request.session["store_name"],date)
+                        totals["ps"]=ps_obj.get_total_sum()
+                        totals["all"]+=totals["ps"]
+
+                    context["view"]="day_overview"
+                    context["totals"]=totals
+
                 if service_name =="Mobile recharge":
                     mb_r_obj=MobileRecharge(request.session["store_name"],date)
                     data_list=mb_r_obj.select()

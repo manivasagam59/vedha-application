@@ -43,7 +43,9 @@ def admin_dashboard(request):
             temp.append(u)
             user_id=user.get_user_id_by_name(u)
             detail=user_detail_obj.get_user_detail(user_id)
+            role=user.get_user_role_by_id(user_id)
             temp.append(detail[0].capitalize())
+            temp.append(role.capitalize())
             temp.append(detail[1])
             user_data.append(temp)
             
@@ -72,9 +74,13 @@ def create_employee(request):
                 request.session["msg_code"]="no"
             elif user.user_exists(request.POST["employee_name"]):
                 request.session["action_msg"]="Employee already exists.\nTry with another name."
+                request.session["msg_code"]="no"
+            elif request.POST["employee_name"]=="":
+                request.session["action_msg"]="Employee type is required."
                 request.session["msg_code"]="no" 
             else:
-                user.create_user(request.POST["employee_name"],"employee","123456")
+                emp_type=request.POST["employee_type"].lower().strip()
+                user.create_user(request.POST["employee_name"],emp_type,"123456")
                 user_id=user.get_user_id_by_name(request.POST["employee_name"])
                 prof_img=""
                 if request.POST["gender"]=="Male":

@@ -14,16 +14,29 @@
         <input type="text" placeholder="Choose service" id="services" name="service_name" readonly>
         <div class="arrow"></div>
         <ul class="options-list">
-            <li class="option">Aadhar Service</li>
-            <li class="option">PAN Service</li>
-            <li class="option">Photo print</li>
-            <li class="option">Votor Service</li>
-            <li class="option">Xerrox</li>
+            {% for s in services_list %}
+            <li class="option">{{ s }}</li>
+            {% endfor %}
             <li class="option">Other</li>
         </ul>
     </div>
 
-    <div id="describe-inps" style="display: none;">
+    <div id="applicant_name" style="display: none;">
+        <label class="custom-label" style="margin-top: 20px;">Name</label>
+        <input type="text" name="applicant_name" class="custom-input">
+    </div>
+
+    <div id="applicant_location" style="display: none;">
+        <label class="custom-label" style="margin-top: 20px;">Location</label>
+        <input type="text" name="applicant_location" class="custom-input">
+    </div>
+
+    <div id="applicant_contact_no" style="display: none;">
+        <label class="custom-label" style="margin-top: 20px;">Contact number</label>
+        <input type="text" name="applicant_contact_no" class="custom-input">
+    </div>
+
+    <div id="describe_inps" style="display: none;">
         <label class="custom-label" style="margin-top: 20px;">Describe</label>
         <input type="text" name="service-description" class="custom-input">
     </div>
@@ -47,21 +60,39 @@
         <button class="custom-btn">Pay amount</button>
     </div>
 
-    
+
 </form>
 
 {% endblock %}
 
 {% block app_js_scripts %}
 
-let services_inp=document.getElementById("services");
-describe_inp_block=document.getElementById("describe-inps");
-services_inp.onvaluechange=()=>{
-    if(services_inp.value.toLowerCase()=="other"){
-        describe_inp_block.style.display="block";
-    }else{
-        describe_inp_block.style.display="none";
-    }
-}
+    let services_inp = document.getElementById("services");
+    let describe_inp_block = document.getElementById("describe_inps");
+    let applicant_name = document.getElementById("applicant_name");
+    let applicant_location = document.getElementById("applicant_location");
+    let applicant_contact_no = document.getElementById("applicant_contact_no");
 
-{% endblock %}
+    const application_services=[{% for i in application_services %}"{{i|lower}}",{% endfor %}];
+
+    services_inp.onvaluechange = () => {
+
+        let selected_service = services_inp.value.toLowerCase();
+        if (application_services.includes(selected_service)) {
+            applicant_name.style.display = "block";
+            applicant_location.style.display = "block";
+            applicant_contact_no.style.display = "block";
+        }else{
+            applicant_name.style.display = "none";
+            applicant_location.style.display = "none";
+            applicant_contact_no.style.display = "none";
+        }
+
+        if (selected_service == "other") {
+            describe_inp_block.style.display = "block";
+        } else {
+            describe_inp_block.style.display = "none";
+        }
+    }
+
+    {% endblock %}

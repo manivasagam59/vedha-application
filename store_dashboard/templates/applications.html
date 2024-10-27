@@ -1,0 +1,491 @@
+{% extends 'store_panel_base.html' %}
+{% block main_window %}
+
+<form action="{% url 'applications' %}" method="get">
+
+    <div style="display: flex;margin-top: 15px;gap: 15px;margin-bottom: 20px;">
+        <div>
+            <label class="custom-label">Year</label>
+            <div class="custom-dropdown">
+                <input type="text" placeholder="Choose year" value="{{selected_year}}" name="year" readonly>
+                <div class="arrow"></div>
+                <ul class="options-list">
+                    {% for i in years %}
+                    <li class="option">{{i}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div style="flex-grow: 1;">
+            <label class="custom-label">Application type</label>
+            <div class="custom-dropdown">
+                <input type="text" id="" value="{{selected_application}}" name="application_name" readonly required>
+                <div class="arrow"></div>
+                <ul class="options-list" id="product_list">
+                    <li class="option">All applications</li>
+                    {% for i in application_services %}
+                    <li class="option">{{i}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div>
+            <label class="custom-label">Status</label>
+            <div class="custom-dropdown">
+                <input type="text" placeholder="Application Status" value="{{selected_status}}" name="status" readonly>
+                <div class="arrow"></div>
+                <ul class="options-list" id="product_list">
+                    <li class="option">All</li>
+                    <li class="option">Issue</li>
+                    <li class="option">Completed</li>
+                    <li class="option">Pending</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: right;">
+        <button class="custom-btn">Show applications</button>
+    </div>
+
+</form>
+
+
+
+<hr style="margin: 20px 0;">
+
+
+{% if records %}
+<h3 style="color: #2f2f2f;margin-bottom: 15px;">{{ application_type }}</h3>
+<table class="custom-table" id="application_table">
+    <tr>
+        <th class="left">Application ID</th>
+        <th class="center">Received at</th>
+        <th class="left">Name</th>
+        <th class="left">Location</th>
+        <th class="center">Status</th>
+        <th class="center"></th>
+        <th class="center"></th>
+    </tr>
+
+    {% for i in records %}
+    <tr aria-label="{{i.application_id}}">
+        <td class="left">{{ i.application_id }}</td>
+        <td class="center">{{ i.date }}</td>
+        <td class="left">{{ i.name }}</td>
+        <td class="left">{{ i.location }}</td>
+        {% if i.status == 'pending' %}
+        <td class="center"><span title="Pending" class="bx bx-timer"></span></td>
+        {% endif %}
+        {% if i.status == 'completed' %}
+        <td class="center"><span title="Completed" class="bx bx-check-circle"></span></td>
+        {% endif %}
+        {% if i.status == 'issue' %}
+        <td class="center"><span title="Application issue" class="bx bx-error-circle"></span></td>
+        {% endif %}
+
+        <td class="center"><span class="bx bx-receipt"></span></td>
+        <td class="center"><span class="bx bx-trash"></span></td>
+
+    </tr>
+    {% endfor %}
+
+</table>
+{% endif %}
+
+{% if pages %}
+<div
+    style="width: 100%;padding: 20px 0px;display: flex;align-items: center;justify-content: space-between;gap: 10px;flex-wrap: wrap;">
+
+    <a href="#"
+        style="border: none;padding: 5px 12px;border-radius: 5px;text-align: center;text-decoration: none;color: #fff;background-color:darkslateblue;min-width: 30px;font-size: 16px;">Previous</a>
+    <div style="display: flex;gap: 10px;">
+        <a href="#"
+            style="border: none;padding: 5px 12px;border-radius: 5px;text-align: center;text-decoration: none;color: #fff;background-color:darkslateblue;min-width: 30px;font-size: 16px;">1</a>
+        <a href="#"
+            style="border: none;padding: 5px 12px;border-radius: 5px;text-align: center;text-decoration: none;color: #fff;background-color:darkslateblue;min-width: 30px;font-size: 16px;">2</a>
+        <a href="#"
+            style="border: none;padding: 5px 12px;border-radius: 5px;text-align: center;text-decoration: none;color: #fff;background-color:darkslateblue;min-width: 30px;font-size: 16px;">3</a>
+
+    </div>
+    <a href="#"
+        style="border: none;padding: 5px 12px;border-radius: 5px;text-align: center;text-decoration: none;color: #fff;background-color:darkslateblue;min-width: 30px;font-size: 16px;">Next</a>
+
+</div>
+{% endif %}
+
+
+<div class="popup-form-bg hide" id="popup_bg">
+
+    <!-- EDIT PRODUCT FORM  -->
+    <div class="form hide" id="application_view" style="margin-top:80px;">
+        <div class="title">
+            <h3>Application Detail and Status</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form style="max-height: 550px;overflow: auto;">
+
+            <table class="custom-table">
+                <tr>
+                    <td class="left">Application ID</td>
+                    <td class="left" colspan="2" id="frm_app_id"></td>
+                </tr>
+                <tr>
+                    <td class="left">Application for</td>
+                    <td class="left" colspan="2" id="frm_app_type"></td>
+                </tr>
+                <tr>
+                    <td class="left">Name</td>
+                    <td class="left" colspan="2" id="frm_appli_name"></td>
+                </tr>
+                <tr>
+                    <td class="left">Location</td>
+                    <td class="left" colspan="2" id="frm_appli_place"></td>
+                </tr>
+                <tr>
+                    <td class="left">Contact No</td>
+                    <td class="left" colspan="2" id="frm_appli_cnt"></td>
+                </tr>
+                <tr>
+                    <td class="left">Application status</td>
+                    <td>
+
+                        <div class="custom-collapse-btn">
+                            <input type="radio" name="application_status" value="complete" id="frm_complete">
+                            <label for="frm_complete">
+                                <span class="bx bx-check-circle"></span>
+                            </label>
+                            <input type="radio" name="application_status" value="pending" id="frm_pending">
+                            <label for="frm_pending">
+                                <span class="bx bx-timer"></span>
+                            </label>
+                            <input type="radio" name="application_status" value="issue" id="frm_issue">
+                            <label for="frm_issue">
+                                <span class="bx bx-error-circle"></span>
+                            </label>
+                        </div>
+
+                    </td>
+
+                </tr>
+                <tr id="applied_no_box" style="display: none;">
+                    <td class="left">Application No</td>
+                    <td class="left" colspan="2">
+                        <input type="text" name="applied_application_no" class="custom-input" id="frm_ref_no">
+                    </td>
+                </tr>
+                <tr id="frm_issue_box_title" style="display: none;">
+                    <td class="left" colspan="3">Remark Issue</td>
+                </tr>
+                <tr id="frm_issue_box" style="background-color: rgb(255, 223, 218);">
+                    <td id="frm_issue_detail" class="left" colspan="3"
+                        style="min-height: 50px;max-height: 100px;overflow-y: auto;" contenteditable="true"></td>
+                </tr>
+            </table>
+
+            <div id="frm_btn_container" style="margin-top: 20px;display: flex;justify-content: right;gap: 15px;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button type="button" class="custom-btn" name="action" id="frm_update_btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- DELETE CONFIRMATION FORM  -->
+    <div class="form hide" id="delete_confirm">
+        <div class="title">
+            <h3>Confirm deletion</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form>
+
+            <label class="custom-label">Do you want to delete the product from stock list?</label>
+
+            <div style="margin-top: 20px;text-align:right;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button class="custom-btn" type="button" id="delete_btn">Delete</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<!-- <p class="no-data-found">No Data found!</p> -->
+    {% endblock %}
+
+    {% block app_js_scripts %}
+    {% if records %}
+
+
+    class UpdateApp {
+        setListeners() {
+            let curr = this;
+            this.close_btn.addEventListener("click", () => { curr.close(); })
+            if (this.cancel_btn != null) {
+                this.cancel_btn.addEventListener("click", () => {
+                    curr.close();
+                })
+            }
+
+            this.frm_complete.addEventListener("click", () => {
+                if (curr.frm_complete.checked) {
+                    curr.applied_no_box.style.removeProperty("display");
+                    curr.frm_issue_box.style.display = "none";
+                    curr.frm_issue_box_title.style.display = "none";
+                    curr.selected_frm_status = "completed";
+                }
+            })
+            this.frm_issue.addEventListener("click", () => {
+                if (curr.frm_issue.checked) {
+                    curr.frm_issue_box_title.style.removeProperty("display");
+                    curr.frm_issue_box.style.removeProperty("display");
+                    curr.applied_no_box.style.display = "none";
+                    curr.frm_issue_detail.focus();
+                    curr.selected_frm_status = "issue";
+                }
+            })
+
+            this.frm_pending.addEventListener("click", () => {
+                if (curr.frm_pending.checked) {
+                    curr.applied_no_box.style.display = "none";
+                    curr.frm_issue_box.style.display = "none";
+                    curr.frm_issue_box_title.style.display = "none";
+                    curr.selected_frm_status = "pending";
+                }
+            })
+
+            this.frm_update_btn.addEventListener("click", () => {
+                curr.update_changes();
+            })
+
+        }
+
+        reset_form() {
+
+            this.application_no = "";
+            this.selected_frm_status = "";
+
+            this.applied_no_box.style.display = "none";
+            this.frm_issue_box.style.display = "none";
+            this.frm_issue_box_title.style.display = "none";
+
+
+            this.btn_container.style.display = "flex";
+            this.frm_update_btn.disabled = false;
+
+            this.frm_application_id.innerText = "";
+            this.frm_app_type.innerText = "";
+            this.frm_appli_name.innerText = "";
+            this.frm_appli_place.innerText = "";
+            this.frm_appli_cnt.innerText = "";
+            this.frm_complete.checked = false;
+            this.frm_pending.checked = false;
+            this.frm_issue.checked = false;
+
+            this.frm_complete.disabled = false;
+            this.frm_pending.disabled = false;
+            this.frm_issue.disabled = false;
+
+            this.frm_ref_no.readOnly = false;
+            this.frm_ref_no.value = "";
+        }
+
+        close() {
+            // this.reset_form();
+            this.app.classList.add("hide");
+            this.app_bg.classList.add("hide");
+        }
+
+        update_changes() {
+            let curr = this;
+
+            this.frm_update_btn.disabled = true;
+            let frm = new FormData();
+            frm.append("csrfmiddlewaretoken", "{{csrf_token}}");
+            frm.append("update", this.application_no);
+            frm.append("status", this.selected_frm_status);
+            frm.append("reference_no", this.frm_ref_no.value);
+            frm.append("issue", this.frm_issue_detail.innerText);
+            let req = new XMLHttpRequest();
+            req.open("POST", "{% url 'applications' %}")
+            req.send(frm)
+            req.onreadystatechange = () => {
+                if (req.status == 200 && req.readyState == 4) {
+                    console.log(req.responseText);
+                    this.frm_update_btn.disabled = false;
+                    curr.close();
+                    window.location.reload();
+                }
+            }
+
+        }
+
+        open(data) {
+            this.reset_form();
+            this.app.classList.remove("hide");
+            this.app_bg.classList.remove("hide");
+
+            this.application_no = data.application_no;
+            this.selected_frm_status = data.status;
+
+            this.frm_application_id.innerText = data.application_no;
+            this.frm_app_type.innerText = data.type;
+            this.frm_appli_name.innerText = data.applicant;
+            this.frm_appli_place.innerText = data.applicant_location;
+            this.frm_appli_cnt.innerText = data.contact_no;
+            if (data.status == "completed") {
+
+                this.frm_ref_no.value = data.reference_id;
+                this.frm_ref_no.readOnly = true;
+                this.applied_no_box.style.removeProperty("display");
+
+                this.frm_complete.checked = true;
+
+                this.frm_complete.disabled = true;
+                this.frm_pending.disabled = true;
+                this.frm_issue.disabled = true;
+
+                this.btn_container.style.display = "none";
+                this.frm_update_btn.disabled = true;
+
+            } else if (data.status == "issue") {
+                this.frm_issue.checked = true;
+                this.frm_issue_box_title.style.removeProperty("display");
+                this.frm_issue_box.style.removeProperty("display");
+                this.frm_issue_detail.innerText = data.remark;
+            } else if (data.status == "pending") {
+                this.frm_pending.checked = true;
+            }
+        }
+
+        constructor(app_bg_id, app_id) {
+            this.app_bg = document.getElementById(app_bg_id);
+            this.app = document.getElementById(app_id); this.inputs = this.app.getElementsByTagName("input");
+            this.close_btn = this.app.getElementsByClassName("bx-x")[0];
+            this.cancel_btn = this.app.getElementsByClassName("secondary")[0];
+
+            this.btn_container = document.getElementById("frm_btn_container")
+            this.frm_update_btn = document.getElementById("frm_update_btn")
+
+            this.application_no = "";
+
+            this.frm_issue_box_title = document.getElementById("frm_issue_box_title");
+            this.frm_issue_box = document.getElementById("frm_issue_box");
+            this.applied_no_box = document.getElementById("applied_no_box");
+
+            this.frm_application_id = document.getElementById("frm_app_id");
+            this.frm_app_type = document.getElementById("frm_app_type");
+            this.frm_appli_name = document.getElementById("frm_appli_name");
+            this.frm_appli_place = document.getElementById("frm_appli_place");
+            this.frm_appli_cnt = document.getElementById("frm_appli_cnt");
+            this.frm_complete = document.getElementById("frm_complete");
+            this.frm_pending = document.getElementById("frm_pending");
+            this.frm_issue = document.getElementById("frm_issue");
+            this.frm_ref_no = document.getElementById("frm_ref_no");
+            this.frm_issue_detail = document.getElementById("frm_issue_detail");
+
+            this.setListeners();
+        }
+    }
+
+
+    class DeleteApp {
+
+        setListeners() {
+            let curr = this;
+            this.close_btn.addEventListener("click", () => { curr.close(); })
+            if (this.cancel_btn != null) {
+                this.cancel_btn.addEventListener("click", () => { curr.close(); })
+            }
+            this.delete_btn.addEventListener("click", () => {
+                curr.delete();
+            });
+        }
+
+        reset_form() {
+            this.delete_application_id = "";
+            this.initiated_element = null;
+        }
+
+        close() {
+            this.initiated_element.disabled = false;
+            this.reset_form();
+            this.app.classList.add("hide");
+            this.app_bg.classList.add("hide");
+        }
+
+        open(application_id, initiate_element) {
+            this.reset_form();
+            this.app.classList.remove("hide");
+            this.app_bg.classList.remove("hide");
+            this.delete_application_id = application_id;
+            this.initiated_element = initiate_element;
+        }
+
+        delete() {
+            let req = new XMLHttpRequest();
+            req.open("POST", "{% url 'applications' %}");
+            let frm = new FormData();
+            frm.append("csrfmiddlewaretoken", "{{csrf_token}}")
+            frm.append("delete", this.delete_application_id)
+            req.send(frm)
+            req.onreadystatechange = () => {
+                if (req.status == 200 && req.readyState == 4) {
+                    this.initiated_element.disabled = false;
+                    this.close();
+                    window.location.reload();
+                }
+            }
+        }
+
+        constructor(app_bg_id, app_id) {
+            this.delete_application_id = "";
+            this.initiated_element = null;
+
+            this.app_bg = document.getElementById(app_bg_id);
+            this.app = document.getElementById(app_id);
+            this.delete_btn = document.getElementById("delete_btn");
+            this.close_btn = this.app.getElementsByClassName("bx-x")[0];
+            this.cancel_btn = this.app.getElementsByClassName("secondary")[0];
+            this.setListeners();
+        }
+    }
+
+
+    let application_form = new UpdateApp("popup_bg", "application_view");
+    let delete_form = new DeleteApp("popup_bg", "delete_confirm");
+    let application_table = document.getElementById("application_table");
+    for (let i = 1; i < application_table.rows.length; i++) {
+        application_table.rows[i].cells[5].children[0].addEventListener("click", () => {
+            if (application_table.rows[i].cells[5].children[0].disabled != true) {
+                application_table.rows[i].cells[5].children[0].disabled = true;
+                let req = new XMLHttpRequest();
+                req.open("POST", "{% url 'applications' %}");
+                let frm = new FormData();
+                frm.append("csrfmiddlewaretoken", "{{csrf_token}}")
+                frm.append("application", application_table.rows[i].ariaLabel)
+                req.send(frm)
+                req.onreadystatechange = () => {
+                    if (req.status == 200 && req.readyState == 4) {
+                        application_table.rows[i].cells[5].children[0].disabled = false;
+                        // console.log(req.responseText);
+                        application_form.open(JSON.parse(req.responseText));
+                    }
+                }
+            }
+        });
+
+        application_table.rows[i].cells[6].children[0].addEventListener("click", () => {
+
+            if (application_table.rows[i].cells[6].children[0].disabled != true) {
+                application_table.rows[i].cells[6].children[0].disabled = true;
+                let application_id = application_table.rows[i].ariaLabel;
+                let initiated_element = application_table.rows[i].cells[6].children[0];
+                delete_form.open(application_id, initiated_element);
+            }
+        });
+    }
+
+    {% endif %}
+
+    {% endblock %}

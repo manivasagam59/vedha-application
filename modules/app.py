@@ -34,6 +34,14 @@ class Stores:
         self.close()
         stores_list=[i[0].capitalize() for i in data]
         return stores_list
+    
+    def get_product_sale_stores_list(self):
+        self.open()
+        result=self.cursor.execute("SELECT StoreName FROM stores WHERE ProductSale=True")
+        data=result.fetchall()
+        self.close()
+        stores_list=[i[0].capitalize() for i in data]
+        return stores_list
 
     def get_store(self,store_name):
         self.open()
@@ -166,6 +174,13 @@ class Users:
         self.close()
         data=[i[0].capitalize() for i in user_list]
         return data
+    
+    def get_user_role_by_id(self,user_id):
+        self.open()
+        result=self.cursor.execute("SELECT Role FROM users WHERE ID=?",[user_id])
+        temp=result.fetchall()
+        self.close()
+        return temp[0][0]
 
 class UserDetail:
 
@@ -479,6 +494,101 @@ class ProductSales:
             self.close()
         return count
 
+class Applications:
+    
+    def __init__(self,store_name,year):
+        self.year=year
+        stores=Stores()
+        store_id=stores.get_store_id_by_name(store_name)
+        path=settings.get_store_dir(store_id)
+        self.table_name="applications_"+str(self.year)
+        self.db_path=path+"\\applications.db"
+
+    def open(self):
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
+        self.cursor.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name}(ID INTEGER PRIMARY KEY AUTOINCREMENT, ApplicationDate DATE DEFAULT (datetime('now','localtime')), ApplicationType VARCHAR(225) NOT NULL , ApplicantName VARCHAR(255) NOT NULL,Location VARCHAR(255) NULL, ContactNo VARCHAR(50) NOT NULL, ApplicationStatus VARCHAR(50) NOT NULL DEFAULT 'pending',AppliedReferenceNo VARCHAR(255) NULL, ApplicationIssue VARCHAR(500) NULL )")
+
+    def close(self):
+        self.connection.close()
+
+    def check_table_exists(self):
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
+        result=self.cursor.execute(f"SELECT name FROM sqlite_schema WHERE type ='table' AND  name = '{self.table_name}';")
+        data=result.fetchall()
+        self.connection.close()
+        if len(data)>0:
+            return True
+        else:
+            return False
+    
+    def get_application_available_years(self):
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
+        result=self.cursor.execute(f"SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';")
+        data=result.fetchall()
+        self.connection.close()
+        years=[]
+        for i in data:
+            temp=i[0].replace("applications_","")
+            years.append(temp)
+        return years
+    
+    def get_applications(self):
+        self.open()
+        result=self.cursor.execute(f"SELECT ID,ApplicationDate,ApplicationType,ApplicantName,Location,ContactNo,ApplicationStatus,AppliedReferenceNo,ApplicationIssue FROM {self.table_name}")
+        data=result.fetchall()
+        self.close()
+        return data
+     
+    def get_applications_by_filter(self,application_type,status_type):
+        condition_query=""
+        if application_type!="*" or status_type!="*":
+            condition_query="WHERE "
+            if application_type!="*":
+                condition_query+="ApplicationType='"+application_type+"'"
+            if application_type!="*" and status_type!="*":
+                condition_query+=" AND "
+            if status_type!="*":
+                condition_query+="ApplicationStatus='"+status_type+"'"
+        
+        self.open()
+        result=self.cursor.execute(f"SELECT ID,ApplicationDate,ApplicationType,ApplicantName,Location,ContactNo,ApplicationStatus,AppliedReferenceNo,ApplicationIssue FROM {self.table_name} {condition_query} ORDER BY ApplicationDate DESC")
+        data=result.fetchall()
+        self.close()
+        return data
+
+    def get_application_detail(self,id):
+        print(self.year)
+        if self.check_table_exists():
+            # application_id=.replace("AP","")
+            self.open()
+            result=self.cursor.execute(f"SELECT ApplicationDate,ApplicationType,ApplicantName,Location,ContactNo,ApplicationStatus,AppliedReferenceNo,ApplicationIssue FROM {self.table_name} WHERE ID=?",[id])
+            data=result.fetchall()
+            self.close()
+            return data[0]
+        else:
+            return tuple(None,None,None,None,None,None,None,None)
+
+    def add_application(self,application_type,applicant_name,location,contact_no):
+        self.open()
+        self.cursor.execute(f"INSERT INTO {self.table_name}(ApplicationType, ApplicantName,Location, ContactNo, ApplicationStatus) VALUES(?,?,?,?,'pending')",[application_type,applicant_name,location,contact_no])
+        self.connection.commit()
+        self.close()
+
+    def update_application(self,application_status,applied_reference_no,apply_issue,id):
+        self.open()
+        self.cursor.execute(f"UPDATE {self.table_name} SET ApplicationStatus=?, AppliedReferenceNo=?, ApplicationIssue=? WHERE ID=?",[application_status,applied_reference_no,apply_issue,id])
+        self.connection.commit()
+        self.close()
+        
+    def delete_application(self,application_id):
+        self.open()
+        self.cursor.execute(f"DELETE FROM {self.table_name} WHERE ID=?",[application_id])
+        self.connection.commit()
+        self.close()
+
 class StockManagement:
 
     def __init__(self,store_name):
@@ -490,7 +600,7 @@ class StockManagement:
     def open(self):
         self.connection=sqlite3.connect(self.db_path)
         self.cursor=self.connection.cursor()
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS stock_list(ID INTEGER PRIMARY KEY AUTOINCREMENT, ProductName VARCHAR(255) NOT NULL, Price INTEGER NOT NULL, StockQuantity INTEGER NOT NULL, MinStockNotificationAt INTEGER NOT NULL)")
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS stock_list(ID INTEGER PRIMARY KEY AUTOINCREMENT, ProductName VARCHAR(255) NOT NULL,BuyPrice INTEGER NOT NULL, SellingPrice INTEGER NOT NULL, StockQuantity INTEGER DEFAULT 0 NOT NULL, MinStockNotificationAt INTEGER DEFAULT 0)")
 
     def close(self):
         self.connection.close()
@@ -517,17 +627,24 @@ class StockManagement:
         else:
             return False
 
-    def add_stock(self,product_name,price,quantity, min_stock_notification_at):
+    def add_stock(self,product_name,buying_price,selling_price,quantity, min_stock_notification_at):
         self.open()
         product_name=product_name.lower().strip()
-        self.cursor.execute("INSERT INTO stock_list(ProductName, Price, StockQuantity, MinStockNotificationAt) VALUES(?,?,?,?)",[product_name,price,quantity, min_stock_notification_at])
+        self.cursor.execute("INSERT INTO stock_list(ProductName, BuyPrice, SellingPrice, StockQuantity, MinStockNotificationAt) VALUES(?,?,?,?,?)",[product_name,buying_price,selling_price,quantity, min_stock_notification_at])
         self.connection.commit()
         self.close()
 
-    def update_stock(self,stock_id,product_name,price,quantity, min_stock_notification_at):
+    def update_all_stock_detail(self,stock_id,product_name,buying_price,selling_price,quantity, min_stock_notification_at):
         self.open()
         product_name=product_name.lower().strip()
-        self.cursor.execute("UPDATE stock_list SET ProductName=?, Price=?, StockQuantity=?, MinStockNotificationAt=? WHERE ID=?",[product_name,price,quantity, min_stock_notification_at,stock_id])
+        self.cursor.execute("UPDATE stock_list SET ProductName=?,BuyPrice=?, SellingPrice=?, StockQuantity=StockQuantity+?, MinStockNotificationAt=? WHERE ID=?",[product_name,buying_price,selling_price,quantity, min_stock_notification_at,stock_id])
+        self.connection.commit()
+        self.close()
+    
+    def update_stock_basic(self,stock_id,product_name,selling_price, min_stock_notification_at):
+        self.open()
+        product_name=product_name.lower().strip()
+        self.cursor.execute("UPDATE stock_list SET ProductName=?, SellingPrice=?, MinStockNotificationAt=? WHERE ID=?",[product_name,selling_price, min_stock_notification_at,stock_id])
         self.connection.commit()
         self.close()
 
@@ -552,7 +669,7 @@ class StockManagement:
 
     def get_all_stocks(self):
         self.open()
-        result=self.cursor.execute("SELECT ID, ProductName, Price, StockQuantity, MinStockNotificationAt FROM stock_list")
+        result=self.cursor.execute("SELECT ID, ProductName,BuyPrice, SellingPrice, StockQuantity, MinStockNotificationAt FROM stock_list")
         data=result.fetchall()
         self.close()
         return data
@@ -566,7 +683,7 @@ class StockManagement:
 
     def get_stock_detail_by_id(self,stock_id):
         self.open()
-        result=self.cursor.execute("SELECT ProductName,Price,StockQuantity FROM stock_list WHERE ID=?",[stock_id])
+        result=self.cursor.execute("SELECT ProductName,SellingPrice,StockQuantity FROM stock_list WHERE ID=?",[stock_id])
         data=result.fetchall()
         self.close()
         if data!=[]:
@@ -576,7 +693,8 @@ class StockManagement:
 
     def get_stock_detail_by_product_name(self,product_name):
         self.open()
-        result=self.cursor.execute("SELECT * FROM stock_list WHERE ProductName=?",[product_name])
+        product_name=product_name.lower().strip()
+        result=self.cursor.execute("SELECT ID,ProductName,BuyPrice,SellingPrice,StockQuantity,MinStockNotificationAt FROM stock_list WHERE ProductName=?",[product_name])
         data=result.fetchall()
         self.close()
         if data!=[]:
@@ -586,11 +704,121 @@ class StockManagement:
 
     def get_total_sum(self):
         self.open()
-        result=self.cursor.execute("SELECT SUM(Price * StockQuantity ) as TotalStockPrice FROM stock_list")
+        result=self.cursor.execute("SELECT SUM(SellingPrice * StockQuantity ) as TotalStockPrice FROM stock_list")
         data=result.fetchall()
         count=data[0][0]
         self.close()
         return count
+
+class ProductSupplier:
+
+    def __init__(self,store_name):
+        stores=Stores()
+        store_id=stores.get_store_id_by_name(store_name)
+        path=settings.get_store_dir(store_id)
+        self.db_path=path+"\\store_database.db"
+
+    def open(self):
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS suppliers(ID INTEGER PRIMARY KEY AUTOINCREMENT, SupplierName VARCHAR(255) NOT NULL, ContactNumber VARCHAR(50) NOT NULL, AlternateContactNumber VARCHAR(50) NULL)")
+
+    def close(self):
+        self.connection.close()
+
+    def check_supplier_exists(self,supplier_name):
+        self.open()
+        supplier_name=supplier_name.lower().strip()
+        result=self.cursor.execute("SELECT COUNT(ID) as Count from suppliers WHERE SupplierName=?",[supplier_name])
+        data=result.fetchall()
+        self.close()
+        if data[0][0] !=0:
+            return True
+        else:
+            return False
+
+    def add_supplier(self,supplier_name,contact_number, alternate_number):
+        self.open()
+        supplier_name=supplier_name.lower().strip()
+        self.cursor.execute("INSERT INTO suppliers(SupplierName,ContactNumber,AlternateContactNumber) VALUES(?,?,?)",[supplier_name,contact_number, alternate_number])
+        self.connection.commit()
+        self.close()
+
+    def update_supplier(self,supplier_id_id,supplier_name,contact_number, alternate_number):
+        self.open()
+        supplier_name=supplier_name.lower().strip()
+        self.cursor.execute("UPDATE suppliers SET SupplierName=?,ContactNumber=?,AlternateContactNumber=? WHERE ID=?",[supplier_name,contact_number, alternate_number,supplier_id_id])
+        self.connection.commit()
+        self.close()
+
+    def delete_supplier(self,supplier_id):
+        self.open()
+        self.cursor.execute("DELETE FROM suppliers  WHERE ID=?",[supplier_id])
+        self.connection.commit()
+        self.close()
+
+    def get_all_supplier_detail(self):
+        self.open()
+        result=self.cursor.execute("SELECT ID,SupplierName,ContactNumber,AlternateContactNumber FROM suppliers")
+        data=result.fetchall()
+        self.close()
+        return data
+
+    def get_supplier_detail_by_id(self,supplier_id):
+        self.open()
+        result=self.cursor.execute("SELECT ID,SupplierName,ContactNumber,AlternateContactNumber FROM suppliers WHERE ID=?",[supplier_id])
+        data=result.fetchall()
+        self.close()
+        if data!=[]:
+            return data[0]
+        else:
+            return data
+
+class StockBuying:
+
+    def __init__(self,store_name):
+        stores=Stores()
+        store_id=stores.get_store_id_by_name(store_name)
+        path=settings.get_store_dir(store_id)
+        self.db_path=path+"\\store_database.db"
+
+    def open(self):
+        self.connection=sqlite3.connect(self.db_path)
+        self.cursor=self.connection.cursor()
+        self.cursor.execute("CREATE TABLE IF NOT EXISTS stock_purchase_book(ID INTEGER PRIMARY KEY AUTOINCREMENT, PurchaseDate DATE NOT NULL, SupplierName VARCHAR(255) NOT NULL, Product VARCHAR(50) NULL, PurchasedPrice INTEGER NOT NULL, PurchasedQuantity INTEGER NOT NULL)")
+
+    def close(self):
+        self.connection.close()
+
+    def purchase_new_product(self,purchase_date,supplier_name,product,price,quantity):
+        self.open()
+        supplier_name=supplier_name.lower().strip()
+        self.cursor.execute("INSERT INTO stock_purchase_book(PurchaseDate,SupplierName,Product,PurchasedPrice,PurchasedQuantity) VALUES(?,?,?,?,?)",[purchase_date,supplier_name,product,price,quantity])
+        self.connection.commit()
+        self.close()
+
+    def delete_purchase(self,supplier_name):
+        self.open()
+        supplier_name=supplier_name.lower().strip()
+        self.cursor.execute("DELETE FROM stock_purchase_book  WHERE SupplierName=?",[supplier_name])
+        self.connection.commit()
+        self.close()
+
+    def get_all_purchase_detail(self):
+        self.open()
+        result=self.cursor.execute("SELECT PurchaseDate,SupplierName,Product,PurchasedPrice,PurchasedQuantity FROM stock_purchase_book")
+        data=result.fetchall()
+        self.close()
+        return data
+    
+    def get_purchase_detail_by_date(self):
+        self.open()
+        result=self.cursor.execute("SELECT PurchaseDate,SupplierName,Product,PurchasedPrice,PurchasedQuantity FROM stock_purchase_book")
+        data=result.fetchall()
+        self.close()
+        return data
+    
+
 
 class Contacts:
 
@@ -659,46 +887,3 @@ class Bugdb:
                 self.cursor.execute("INSERT INTO filtered_contacts(ContactNumber,Operator) VALUES(?,?)",[contact_no,operator])
             self.connection.commit()
             self.close()
-
-
-# class PendingTask:
-    
-#     def __init__(self,store_name,date):
-#         year=str(date[0])
-#         month=str(date[1])
-#         day=str(date[2])
-#         if len(month)==1:
-#             month="0"+month
-#         if len(day)==1:
-#             day="0"+day
-#         stores=Stores()
-#         store_id=stores.get_store_id_by_name(store_name)
-#         path=settings.get_store_dir(store_id)
-#         self.db_path=path+"\\store_database.db"
-
-#     def open(self):
-#         self.connection=sqlite3.connect("")
-#         self.cursor=self.connection.cursor()
-#         self.cursor.execute("CREATE TABLE IF NOT EXISTS pending_task(ID INTEGER PRIMARY KEY AUTOINCREMENT, CreatedDate DATE DEFAULT (datetime('now','localtime')), Task VARCHAR(255) NOT NULL , CreatedBy VARCHAR(255) NOT NULL)")
-
-#     def close(self):
-#         self.connection.close()
-
-#     def get_all_tasks(self):
-#         self.open()
-#         result=self.cursor.execute("SELECT * FROM pending_task")
-#         data=result.fetchall()
-#         self.close()
-#         return data
-
-#     def add_task(self,task,created_by):
-#         self.open()
-#         self.cursor.execute("INSERT INTO pending_task(Task,CreatedBy) VALUES(?,?)",[task,created_by])
-#         self.connection.commit()
-#         self.close()
-        
-#     def delete_task(self,task_id):
-#         self.open()
-#         self.cursor.execute("DELETE FROM pending_task WHERE ID=?",[task_id])
-#         self.connection.commit()
-#         self.close()

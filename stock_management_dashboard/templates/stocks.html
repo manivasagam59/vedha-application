@@ -1,0 +1,370 @@
+{% extends 'stock_management_panel_base.html' %}
+{% block main_window %}
+
+<div class="popup-form-bg hide" id="popup_bg">
+
+    <!-- ADD STOCK  -->
+    <div class="form hide" id="add_product_app" style="margin-top: 80px;">
+        <div class="title">
+            <h3>New stock</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="{% url 'stocks' %}" method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="product_id" value="">
+
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Product</label>
+                <div class="custom-dropdown">
+                    <input type="text" placeholder="Product" id="product_selector" name="product_name">
+                    <div class="arrow"></div>
+                    <ul class="options-list" id="product_list">
+                        {% for i in stocks %}
+                        <li class="option">{{ i.product_name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div style="display: flex;gap: 15px;">
+                <div style="width: fit-content;">
+                    <label class="custom-label">Buying date</label>
+                    <input type="date" name="buying_date" class="custom-input" required>
+                </div>
+                <div style="flex-grow: 1;">
+                    <label class="custom-label">Supplier</label>
+                    <div class="custom-dropdown">
+                        <input type="text" placeholder="Select supplier" name="supplier_name" readonly>
+                        <div class="arrow"></div>
+                        <ul class="options-list">
+                            {% for i in suppliers %}
+                            <li class="option">{{ i }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="display: flex;gap: 15px;">
+                <div style="width: 50%;">
+                    <label class="custom-label">Buying Price</label>
+                    <input type="number" min="0" name="buying_price" class="custom-input" placeholder="0" required>
+                </div>
+                <div style="width: 50%;">
+                    <label class="custom-label">Selling Price</label>
+                    <input type="number" min="0" name="selling_price" class="custom-input" placeholder="0" required>
+                </div>
+            </div>
+
+
+            <div style="display: flex;gap: 15px;">
+
+                <div style="width: 50%;">
+                    <label class="custom-label">Buying Quantity</label>
+                    <input type="number" min="0" name="buying_quantity" class="custom-input" placeholder="0" required>
+                </div>
+
+                <div style="width: 50%;">
+                    <label class="custom-label">In Stock Quantity</label>
+                    <input type="number" min="0" name="in_stock_quantity" class="custom-input" placeholder="0" disabled>
+                </div>
+            </div>
+
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Minimum stock for notification</label>
+                <input type="number" min="0" name="stock_notification_count" class="custom-input" placeholder="0">
+            </div>
+            <p
+                style="margin: 10px 0;padding: 10px;border: 1px solid lightgray;background-color: rgba(205, 92, 92, 0.263);font-size: 14px;color: black;font-weight: 100;">
+                Note : If the product already exists, it updates the price and add stock quantity with existed stocks
+                count.</p>
+
+            <div style="margin-top: 20px;text-align:right;">
+                <button class="custom-btn" name="action" value="add">Add Stock</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- EDIT PRODUCT FORM  -->
+    <div class="form hide" id="edit_form">
+        <div class="title">
+            <h3>Edit product</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="{% url 'stocks' %}" method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="product_id">
+
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Product name</label>
+                <input type="text" name="product_name" class="custom-input" required>
+            </div>
+
+            <div style="display: flex;gap: 15px;">
+                <div style="width: 50%;">
+                    <label class="custom-label">Buying price</label>
+                    <input type="number" min="0" name="buying_price" class="custom-input" disabled>
+                </div>
+                <div style="width: 50%;">
+                    <label class="custom-label">Selling Price</label>
+                    <input type="number" min="0" name="price" class="custom-input" required>
+                </div>
+            </div>
+
+            <div style="display: flex;gap: 15px;">
+                <div style="width: 50%;">
+                    <label class="custom-label">Stock Quantity</label>
+                    <input type="number" min="0" name="quantity" class="custom-input" disabled>
+                </div>
+                <div style="width: 50%;">
+                    <label class="custom-label">Minimum stock for notification</label>
+                    <input type="number" min="0" name="min_stock" class="custom-input" required>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;text-align:right;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button class="custom-btn" name="action" value="update">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- DELETE CONFIRMATION FORM  -->
+    <div class="form hide" id="delete_confirm">
+        <div class="title">
+            <h3>Confirm deletion</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="{% url 'stocks' %}" method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="product_id">
+
+            <label class="custom-label">Do you want to delete the product from stock list?</label>
+
+            <div style="margin-top: 20px;text-align:right;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button class="custom-btn" name="action" value="delete">Delete</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+
+
+
+<div style="display: flex;align-items: center;justify-content: space-between;margin-bottom: 20px;">
+    <h3>Store stocks list</h3>
+    <div style="display: flex;gap: 15px;">
+        <button class="custom-btn" id="add_product_btn">Add Stock</button>
+    </div>
+</div>
+
+{% if stocks %}
+<table class="custom-table" id="stock_list_tb">
+
+    <tr style="display: sticky;top: 0;">
+        <th class="center">Sn</th>
+        <th class="left">Product Name</th>
+        <th class="right">Rate</th>
+        <th class="right">Quantity</th>
+        <th class="right" style="width: min-content;">Notifier count</th>
+        <th class="right">Stock price</th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    {% for i in stocks %}
+    <tr aria-label="{{ i.id }}" aria-valuenow="{{i.buy_price}}">
+        <td class="center">{{ forloop.counter }}</td>
+        <td class="left">{{ i.product_name }}</td>
+        <td class="right">{{ i.price }}</td>
+        <td class="right">{{ i.stock_quantity }}</td>
+        <td class="right">{{ i.notification_at }}</td>
+        <td class="right">{{ i.stock_price }}</td>
+        <td><span class="bx bx-edit"></span></td>
+        <td><span class="bx bx-trash"></span></td>
+    </tr>
+    {% endfor %}
+    <tr style="background-color: #e3ffe3;">
+        <td colspan="5" class="left">Total stock price in the store</td>
+        <td class="right">{{ total_stock_price }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+
+
+</table>
+{% else %}
+<p class="no-data-found">No Stocks found!</p>
+{% endif %}
+
+
+
+{% endblock %}
+
+<script>
+    {% block app_js_scripts %}
+
+
+    let add_product_btn = document.getElementById("add_product_btn");
+
+
+    class PopUpApp {
+
+        setListeners() {
+            let curr = this;
+            this.close_btn.addEventListener("click", () => { curr.close(); })
+            if (this.cancel_btn != null) {
+                this.cancel_btn.addEventListener("click", () => { curr.close(); })
+            }
+        }
+
+        reset_form() {
+            for (let i = 0; i < this.inputs.length; i++) {
+                if (this.inputs[i].name != "csrfmiddlewaretoken") {
+                    this.inputs[i].value = "";
+                }
+            }
+        }
+        close() {
+            this.reset_form();
+            this.app.classList.add("hide");
+            this.app_bg.classList.add("hide");
+        }
+        open(val_obj) {
+            this.reset_form();
+            this.app.classList.remove("hide");
+            this.app_bg.classList.remove("hide");
+            let keys = Object.keys(val_obj);
+            for (let i = 0; i < keys.length; i++) {
+                this.inputs_dict[keys[i]].value = val_obj[keys[i]]
+            }
+        }
+        constructor(app_bg_id, app_id) {
+            this.app_bg = document.getElementById(app_bg_id);
+            this.app = document.getElementById(app_id);
+            this.inputs = this.app.getElementsByTagName("input");
+            this.close_btn = this.app.getElementsByClassName("bx-x")[0];
+            this.cancel_btn = this.app.getElementsByClassName("secondary")[0]; this.inputs_dict = {}; for (let
+                i = 0; i < this.inputs.length; i++) { this.inputs_dict[this.inputs[i].name] = this.inputs[i]; } this.setListeners();
+        }
+    }
+
+    class AddStockApp extends PopUpApp {
+
+        setAdditionalListeners() {
+            let curr = this;
+
+            this.product_select_inp.addEventListener("change", (e) => {
+                curr.fetchExistedProductDetail();
+            });
+
+            this.product_select_inp.onvaluechange = () => {
+                curr.fetchExistedProductDetail();
+            }
+
+
+            this.product_select_inp.onkeyup = () => {
+                let prd = curr.product_select_inp.value.toLowerCase();
+                for (let i = 0; i < curr.product_select_option.children.length; i++) {
+                    if (curr.product_select_option.children[i].innerText.toLowerCase().indexOf(prd) == -1) {
+                        curr.product_select_option.children[i].style.display = "none";
+                    } else {
+                        curr.product_select_option.children[i].style.display = "block";
+                    }
+                }
+
+            }
+
+        }
+
+        open() {
+            super.open({})
+        }
+
+        fetchExistedProductDetail() {
+            let curr = this;
+            // console.log(curr.product_select_inp.value);
+
+            // Product info Requesting
+            if (curr.product_select_inp.value.trim() != "") {
+                let frm = new FormData();
+                frm.append("csrfmiddlewaretoken", '{{csrf_token}}');
+                frm.append("action", "get_detail");
+                frm.append("product_name", curr.product_select_inp.value);
+                let rq = new XMLHttpRequest();
+                rq.open("POST", "{% url 'stocks' %}");
+                rq.send(frm);
+                rq.onreadystatechange = () => {
+                    if (rq.readyState == 4 && rq.status == 200) {
+                        console.log(rq.responseText);
+                        let data = JSON.parse(rq.responseText);
+                        if (data.status == "ok") {
+                            curr.inputs_dict.product_id.value = data.product_id;
+                            curr.inputs_dict.product_name.value = data.product_name;
+                            curr.inputs_dict.buying_price.value = data.buying_price;
+                            curr.inputs_dict.selling_price.value = data.price;
+                            curr.inputs_dict.in_stock_quantity.value = data.in_stock;
+                            curr.inputs_dict.stock_notification_count.value = data.stock_notification_count;
+                        }
+                    }
+                }
+            }
+        }
+
+        constructor(app_bg_id, app_id) {
+            super(app_bg_id, app_id);
+            this.product_select_inp = document.getElementById("product_selector");
+            this.product_select_option = document.getElementById("product_list");
+            this.setAdditionalListeners();
+        }
+    }
+
+    let add_product_form = new AddStockApp("popup_bg", "add_product_app");
+    let edit_form = new PopUpApp("popup_bg", "edit_form");
+    let delete_confirm_form = new PopUpApp("popup_bg", "delete_confirm");
+
+    add_product_btn.addEventListener("click", () => { add_product_form.open() })
+
+    function close_all_app(app_name, val) {
+        add_product_form.close();
+        edit_form.close();
+        delete_confirm_form.close();
+    }
+
+    {% if stocks %}
+
+    let stock_list_table = document.getElementById("stock_list_tb");
+    let edit_btns = stock_list_table.querySelectorAll("span.bx-edit");
+    let delete_btns = stock_list_table.querySelectorAll("span.bx-trash");
+    for (let i = 0; i < edit_btns.length; i++) {
+        close_all_app();
+        let obj_val = {}; let
+            parent = delete_btns[i].parentNode.parentElement;
+        obj_val.product_id = parent.ariaLabel;
+        obj_val.product_name = parent.cells[1].innerText;
+        obj_val.buying_price = parent.ariaValueNow;
+        obj_val.price = parent.cells[2].innerText;
+        obj_val.quantity = parent.cells[3].innerText;
+        obj_val.min_stock = parent.cells[4].innerText;
+        edit_btns[i].addEventListener("click", () => { edit_form.open(obj_val) });
+    }
+    for (let i = 0; i < delete_btns.length; i++) {
+        close_all_app();
+        let obj_val = {}; let
+            parent = delete_btns[i].parentNode.parentElement; obj_val.product_id = parent.ariaLabel;
+        delete_btns[i].addEventListener("click", () => { delete_confirm_form.open(obj_val) });
+    }
+    {% endif %}
+
+
+    {% endblock %}

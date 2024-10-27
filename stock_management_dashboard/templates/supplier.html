@@ -1,0 +1,221 @@
+{% extends 'stock_management_panel_base.html' %}
+{% block main_window %}
+
+<div class="popup-form-bg hide" id="popup_bg">
+
+    <!-- ADD SUPPLER FORM  -->
+    <div class="form hide" id="add_supplier_app">
+        <div class="title">
+            <h3>Add new supplier</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="{% url 'supplier' %}" method="post">
+
+            {% csrf_token %}
+
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Supplier name</label>
+                <input type="text" name="supplier_name" class="custom-input" required>
+            </div>
+            <div style="display: flex;gap: 15px;">
+                <div style="width: 50%;">
+                    <label class="custom-label">Contact no</label>
+                    <input type="number" name="contact_number" class="custom-input mb-no" required>
+                </div>
+                <div style="width: 50%;">
+                    <label class="custom-label">Alternate number</label>
+                    <input type="number" name="alternate_number" class="custom-input mb-no" >
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;text-align:right;">
+                <button class="custom-btn" name="action" value="add">Add supplier</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- EDIT SUPPLIER FORM  -->
+    <div class="form hide" id="edit_supplier_app">
+        <div class="title">
+            <h3>Edit supplier detail</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="" method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="supplier_id">
+
+            {% csrf_token %}
+
+            <div style="flex-grow: 1;">
+                <label class="custom-label">Supplier name</label>
+                <input type="text" name="supplier_name" class="custom-input" required>
+            </div>
+
+            <div style="display: flex;gap: 15px;">
+                <div style="width: 50%;">
+                    <label class="custom-label">Contact no</label>
+                    <input type="number" name="contact_number" class="custom-input mb-no" required>
+                </div>
+                <div style="width: 50%;">
+                    <label class="custom-label">Alternate number</label>
+                    <input type="number" name="alternate_number" class="custom-input mb-no" >
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;text-align:right;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button class="custom-btn"  name="action" value="update">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- DELETE CONFIRMATION FORM  -->
+    <div class="form hide" id="delete_confirm">
+        <div class="title">
+            <h3>Confirm deletion</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="" method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden" name="supplier_id">
+
+            <label class="custom-label">Do you want to delete the supplier?</label>
+
+            <div style="margin-top: 20px;text-align:right;">
+                <button type="button" class="custom-btn secondary">Cancel</button>
+                <button class="custom-btn"  name="action" value="delete">Delete</button>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+
+
+
+<div style="display: flex;align-items: center;justify-content: space-between;margin-bottom: 20px;">
+<h3>Product suppliers</h3>
+<button class="custom-btn" id="add_supplier_btn">Add supplier</button>
+</div>
+
+<hr style="margin-bottom: 15px;">
+
+{% if suppliers %}
+<table class="custom-table" id="supplier_list_tb">
+    <tr>
+        <th class="center">Sn</th>
+        <th class="left">Supplier name</th>
+        <th class="center">Contact no</th>
+        <th class="center">Alternate number</th>
+        <th class="center"></th>
+        <th class="center"></th>
+    </tr>
+    {% for i in suppliers %}
+    <tr aria-label="{{i.id}}">
+        <td class="center">{{forloop.counter}}</td>
+        <td class="left">{{i.name}}</td>
+        <td class="center">{{i.contact_no}}</td>
+        <td class="center">{{i.alternate_no}}</td>
+        <td class="center"><span class="bx bx-edit"></span></td>
+        <td class="center"><span class="bx bx-trash"></span></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
+
+{% block app_js_scripts %}
+
+    let add_supplier_btn = document.getElementById("add_supplier_btn");
+
+    class PopUpApp {
+
+        setListeners() {
+            let curr = this;
+            this.close_btn.addEventListener("click", () => { curr.close(); })
+            if (this.cancel_btn != null) {
+                this.cancel_btn.addEventListener("click", () => { curr.close(); })
+            }
+        }
+
+        reset_form() {
+            for (let i = 0; i < this.inputs.length; i++) {
+                if(this.inputs[i].name!="csrfmiddlewaretoken"){
+                this.inputs[i].value = "";}
+            }
+        }
+
+        close() {
+            this.reset_form();
+            this.app.classList.add("hide");
+            this.app_bg.classList.add("hide");
+        }
+
+        open(val_obj) {
+            this.reset_form();
+            this.app.classList.remove("hide");
+            this.app_bg.classList.remove("hide");
+            let keys=Object.keys(val_obj);
+            for(let i=0;i<keys.length;i++){
+                this.inputs_dict[keys[i]].value=val_obj[keys[i]]
+            }
+            
+        }
+
+        constructor(app_bg_id, app_id) {
+            this.app_bg = document.getElementById(app_bg_id);
+            this.app = document.getElementById(app_id);
+            this.inputs = this.app.getElementsByTagName("input");
+            this.close_btn = this.app.getElementsByClassName("bx-x")[0];
+            this.cancel_btn = this.app.getElementsByClassName("secondary")[0];
+            this.inputs_dict={};
+            for(let i=0;i<this.inputs.length;i++){
+                    this.inputs_dict[this.inputs[i].name]=this.inputs[i];
+            }
+            this.setListeners();
+        }
+    }
+
+    let create_form = new PopUpApp("popup_bg", "add_supplier_app");
+    let edit_form = new PopUpApp("popup_bg", "edit_supplier_app");
+    let delete_confirm_form = new PopUpApp("popup_bg", "delete_confirm");
+
+    add_supplier_btn.addEventListener("click",()=>{create_form.open({})})
+
+    function close_all_app(app_name,val){
+        create_form.close();
+        edit_form.close();
+        delete_confirm_form.close();
+    }
+
+    {% if suppliers %}
+
+    let supplier_list_table = document.getElementById("supplier_list_tb");
+    let edit_btns = supplier_list_table.querySelectorAll("span.bx-edit");
+    let delete_btns = supplier_list_table.querySelectorAll("span.bx-trash");
+    for (let i = 0; i < edit_btns.length; i++) {
+        close_all_app();
+        let obj_val={};
+        let parent=delete_btns[i].parentNode.parentElement;
+        obj_val.supplier_id=parent.ariaLabel;
+        obj_val.supplier_name=parent.cells[1].innerText;
+        obj_val.contact_number=parent.cells[2].innerText;
+        obj_val.alternate_number=parent.cells[3].innerText;
+        edit_btns[i].addEventListener("click", () => { edit_form.open(obj_val) });
+    }
+    for (let i = 0; i < delete_btns.length; i++) {
+        close_all_app();
+        let obj_val={};
+        let parent=delete_btns[i].parentNode.parentElement;
+        obj_val.supplier_id=parent.ariaLabel;
+        delete_btns[i].addEventListener("click", () => { delete_confirm_form.open(obj_val) });
+    }
+    {% endif %}
+
+{% endblock %}

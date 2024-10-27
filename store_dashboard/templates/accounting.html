@@ -38,6 +38,62 @@
 
 <hr>
 
+{% if view == 'day_overview' %}
+<div style="display: flex;justify-content: space-between;flex-wrap: wrap;gap: 15px;margin-top: 15px;">
+
+        
+    {% if mb_recharge %}
+    <div class="smart-card">
+        <span class="bx bx-mobile-alt"></span>
+        <div>
+            <p class="lg-txt">Mobile recharge</p>
+            <p class="sm-txt">Rs. {{ totals.mb }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if dth_recharge %}
+    <div class="smart-card">
+        <span class="bx bx-broadcast"></span>
+        <div>
+            <p class="lg-txt">Dth recharge</p>
+            <p class="sm-txt">Rs. {{ totals.dth }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if online_services %}
+    <div class="smart-card">
+        <span class="bx bx-world"></span>
+        <div>
+            <p class="lg-txt">Online services</p>
+            <p class="sm-txt">Rs. {{ totals.os }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if product_sales %}
+    <div class="smart-card">
+        <span class="bx bx-cart"></span>
+        <div>
+            <p class="lg-txt">Product sales</p>
+            <p class="sm-txt">Rs. {{ totals.ps }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="smart-card">
+        <span class="bx bx-chalkboard"></span>
+        <div>
+            <p class="lg-txt">Total sales and services</p>
+            <p class="sm-txt">Rs. {{ totals.all }}</p>
+        </div>
+    </div>
+
+</div>
+
+{% endif %}
+
 {% if view == 'mobile_recharge' %}
 
 {% if data_list %}

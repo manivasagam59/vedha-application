@@ -20,11 +20,11 @@
         {% if online_services %}
         <a href="{% url 'online_services' %}" {% if active_page == "online_services" %} class="active" {% endif %}> <span class="bx bx-world"></span> <span>Online Services</span></a>
         {% endif %}
-        {% if product_sales %}
-        <a href="{% url 'product_sales' %}" {% if active_page == "product_sales" %} class="active" {% endif %}> <span class="bx bx-cart"></span> <span>Product Sale</span></a>
+        {% if online_services %}
+        <a href="{% url 'applications' %}" {% if active_page == "applications" %} class="active" {% endif %}> <span class="bx bx-note"></span> <span>Applications</span></a>
         {% endif %}
         {% if product_sales %}
-        <a href="{% url 'stock_management' %}" {% if active_page == "stock_management" %} class="active" {% endif %}> <span class="bx bx-package"></span> <span>Stock Management</span></a>
+        <a href="{% url 'product_sales' %}" {% if active_page == "product_sales" %} class="active" {% endif %}> <span class="bx bx-cart"></span> <span>Product Sale</span></a>
         {% endif %}
         <a href="{% url 'accounting' %}" {% if active_page == "accounting" %} class="active" {% endif %}> <span class="bx bx-wallet"></span> <span>Accounting</span></a>
         <!-- <a href="" {% if active_page == "pending_task" %} class="active" {% endif %}> <span class="bx bx-check-square"></span> <span>Pending Tasks</span></a> -->
@@ -53,7 +53,7 @@
 
 {% block main_window_top %}
 <div class="title-bar">
-    <h2>Hello, {{ user_name }}</h2>
+    <h2>Have a nice day, {{ user_name }}</h2>
     <h3><span class="bx bx-store-alt"></span><span>{{ store_name }}</span></h3>
 </div>
 

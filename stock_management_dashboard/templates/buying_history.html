@@ -1,0 +1,53 @@
+{% extends 'stock_management_panel_base.html' %}
+{% block main_window %}
+
+<div class="popup-form-bg hide" id="popup_bg">
+
+    <!-- BUY PRODUCTS LIST SHOWER   -->
+    <div class="form hide" id="">
+        <div class="title">
+            <h3>Confirm deletion</h3>
+            <span class="bx bx-x"></span>
+        </div>
+        <form action="" method="post">
+
+           
+        </form>
+    </div>
+
+</div>
+
+
+
+<table class="custom-table">
+    <tr>
+        <th class="center">Sn</th>
+        <th class="center">Date of buying</th>
+        <th class="left">Supplier name</th>
+        <th class="center">Contact name</th>
+        <th class="right">Amount of Buying</th>
+        <th class="center"></th>
+    </tr>
+    {% for i in purchase_details %}
+    <tr>
+        <td class="center">{{forloop.counter}}</td>
+        {% for j in i %}
+            <td class="">{{j}}</td>
+        {% endfor %}
+        <!-- <td class="center">{}</td>
+        <td class="left">Supplier no 1</td>
+        <td class="center">96542514551</td>
+        <td class="right">2000</td>
+        <td class="center"><span class="bx bx-receipt"></span></td> -->
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+{% endblock %}
+
+{% block app_js_scripts %}
+
+{% endblock %}

@@ -137,6 +137,7 @@ input[type="number"].custom-input::-webkit-inner-spin-button {
     border-radius: 5px;
     box-shadow: 0px 0px 5px lightgray;
     background-color: #fff;
+    z-index: 100;
 }
 
 .custom-dropdown .options-list::-webkit-scrollbar {
@@ -243,6 +244,19 @@ input[type="number"].custom-input::-webkit-inner-spin-button {
     color: darkslateblue;
 }
 
+.custom-table .bx-check-circle{
+    color: rgb(0, 219, 0);
+}
+
+.custom-table .bx-error-circle{
+    color:darkslateblue;
+}
+
+.custom-table .bx-timer{
+    color:darkgray;
+}
+
+
 /* Custom notification ============================================================= */
 .notification {
     display: flex;
@@ -282,6 +296,47 @@ input[type="number"].custom-input::-webkit-inner-spin-button {
     font-size: 20px;
     color: #2f2f2f;
 }
+
+/* Custom collapse button */
+.custom-collapse-btn{
+    display: flex;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+.custom-collapse-btn input[type="radio"]{
+    display: none;
+}
+
+.custom-collapse-btn label{
+    min-width: 40px;
+    flex-grow: 1;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid lightgray;
+}
+
+.custom-collapse-btn label:last-child{
+    border-right: none;
+}
+
+.custom-collapse-btn label .bx{
+    font-size: 22px;
+    color: lightgray;
+}
+
+.custom-collapse-btn input[type="radio"]:checked+label .bx-check-circle{
+    color: #00a521;
+}
+.custom-collapse-btn input[type="radio"]:checked+label .bx-timer{
+    color: #ffcc00;
+}
+.custom-collapse-btn input[type="radio"]:checked+label .bx-error-circle{
+    color: #13007d;
+}
+
+
 
 /* ================================================================================= */
 @keyframes rtol {

@@ -17,7 +17,10 @@ def login(request):
     if request.method=="POST":
         users=Users()   
         result=users.check_authorization(request.POST["username"],request.POST["password"],"employee")
-        if result:
+        if request.POST["store"]=="":
+            request.session["error"]="Store field is required to login"
+            return redirect("/login")
+        elif result:
             user_id=users.get_user_id_by_name(request.POST["username"])
             request.session["user_id"]=user_id
             request.session["user_role"]="employee"
@@ -26,7 +29,7 @@ def login(request):
             return redirect("/dashboard")
         else:
             request.session["error"]="Invalid user name or password"
-            return redirect("login")
+            return redirect("/login")
     store_obj=Stores()
     stores_list=store_obj.get_stores_list()
     context=getContext(request)
@@ -52,19 +55,22 @@ def admin_login(request):
 def stock_manager_login(request):
     if request.method=="POST":
         users=Users()   
-        result=users.check_authorization(request.POST["username"],request.POST["password"],"stockmanager")
-        if result:
+        result=users.check_authorization(request.POST["username"],request.POST["password"],"stock manager")
+        if request.POST["store"]=="":
+            request.session["error"]="Store field is required to login"
+            return redirect("/stock_manager_login")
+        elif result:
             user_id=users.get_user_id_by_name(request.POST["username"])
             request.session["user_id"]=user_id
-            request.session["user_role"]="employee"
+            request.session["user_role"]="stock manager"
             request.session["user_name"]=request.POST["username"]
             request.session["store_name"]=request.POST["store"]
-            return redirect("/dashboard")
+            return redirect("/stock_management")
         else:
             request.session["error"]="Invalid user name or password"
             return redirect("/stock_manager_login")
     store_obj=Stores()
-    stores_list=store_obj.get_stores_list()
+    stores_list=store_obj.get_product_sale_stores_list()
     context=getContext(request)
     context["stores_list"]=[i.capitalize() for i in stores_list]
     return render(request,"stock_manager_login.html",context)

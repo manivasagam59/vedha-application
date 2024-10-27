@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'authorization',
     'admin_dashboard',
     'store_dashboard',
+    "stock_management_dashboard",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

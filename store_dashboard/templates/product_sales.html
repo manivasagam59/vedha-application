@@ -13,7 +13,7 @@
             <div class="arrow"></div>
             <ul class="options-list" id="product_list">
                 {% for i in products %}
-                    <ol class="option" aria-label="{{ i.id }}">{{ i.product_name }}</ol>
+                    <li class="option" aria-label="{{ i.id }}">{{ i.product_name }}</li>
                 {% endfor %}
             </ul>
         </div>
@@ -27,6 +27,7 @@
             <input type="text" min="0" max="0" value="0" class="custom-input" style="border-radius: 0px;text-align: center;" id="quantity" disabled>
             <button class="custom-btn" style="border-radius: 0px 5px 5px 0px;" id="incrementer"><span class="bx bx-plus"></span></button>
         </div>
+        <p id="out-of-stocks" style="color: red;font-size: 14px;margin: 4px 0;font-family: monospace;visibility: hidden;">Out of stocks</p>
 
         <label class="custom-label" style="margin-top: 20px;">Price</label>
         <input type="number"  value="0" class="custom-input" id="q_price" disabled>
@@ -81,6 +82,7 @@
     let quantity_input=document.getElementById("quantity");
     let quantity_increment=document.getElementById("incrementer");
     let quantity_decrement=document.getElementById("decrementer");
+    let stock_out=document.getElementById("out-of-stocks");
     let q_price=document.getElementById("q_price");
     let add_product_btn=document.getElementById("add_product_btn");
     let cart_table=document.getElementById("cart_list_table");
@@ -118,7 +120,8 @@
                     console.log(rq.responseText);
                     let data=JSON.parse(rq.responseText);
                     rate.value=Number(data.rate);
-                    quantity_input.max=data.max_quantity
+                    quantity_input.max=data.max_quantity;
+                    if(data.max_quantity==0){stock_out.style.visibility="visible";}else{stock_out.style.visibility="hidden";}
                 }
             }
 
@@ -211,6 +214,7 @@
             quantity_input.value=0
             quantity_input.max=0
             q_price.value=0
+            stock_out.style.visibility="hidden";
         }
         // console.log(cart);
     });
@@ -222,6 +226,7 @@
         quantity_input.value=0;
         quantity_input.max=0;
         q_price.value=0;
+        stock_out.style.visibility="hidden";
         // create cart view
         set_cart_list_view();
     });

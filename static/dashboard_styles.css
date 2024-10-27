@@ -231,7 +231,7 @@ h3.dash-title {
 
 
 .popup-form-bg {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -243,11 +243,13 @@ h3.dash-title {
 }
 
 .popup-form-bg .form {
-    border: 1px solid black;
+    border: none;
     background-color: #fff;
     min-width: 700px;
     margin-top: 140px;
     height: fit-content;
+    border-radius: 20px;
+    box-shadow: 0px 0px 21px #c88e8e;
 }
 
 .popup-form-bg.hide,
@@ -264,11 +266,16 @@ h3.dash-title {
     align-items: center;
     justify-content: space-between;
     padding: 10px 15px;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid black;
+}
+
+.popup-form-bg .form .title h3{
+    font-size: 17px;
+    color: #2d2d2d;
 }
 
 .popup-form-bg .form .title .bx-x {
-    font-size: 22px;
+    font-size: 25px;
     cursor: pointer;
 }
 
